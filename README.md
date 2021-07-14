@@ -1,4 +1,5 @@
 ## Rukbik's Cube Everywhere! --- WCA version
+### seanachanpai
 
 這是高一自主學習完成的作品，有python版、python/flask/html/javascript版、跟html/css/javascript版。
 
