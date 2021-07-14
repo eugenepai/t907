@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Rubik's Cube Everywhere! --- WCA Rules</title>
+    <meta charset="utf-8">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <style>
+        /* basic css properties*/
+        html {  touch-action: manipulation; }
+        table {table-layout:fixed; }
+        .beHidden {display:none;}
+        .noBorder {border:none; border-width:0;}
+        .nonSelectable {user-select: none; -webkit-user-select: none;}        
+        /* table head setting*/
+        .tbl {border:2px black solid; width:100%; height:100%; table-layout:fixed; font-family: Arial;}
+        .tbltr12 {text-align:center; font-weight:bolder;color:black}
+        .tbltr3 {font-size:1em; line-height:1em;text-align:center;font-weight:bold;color:black;}
+        /*Game control button setting*/
+        .plainCtrl {color:black; border: 2px solid black; border-radius:5px; width:6em; height:2.5em; }
+
+        .W-CCW {background: -webkit-linear-gradient(0deg,white,gray); }
+        .W-CW {background: -webkit-linear-gradient(180deg,white,gray); }
+        .B-CCW {background: -webkit-linear-gradient(right,white,Blue); }
+        .B-CW {background: -webkit-linear-gradient(left,white,blue); }
+        .G-CCW {background: -webkit-linear-gradient(right,white,green); }
+        .G-CW {background: -webkit-linear-gradient(left,white,green); }
+        .R-CCW {background: -webkit-linear-gradient(right,white,red); }
+        .R-CW {background: -webkit-linear-gradient(left,white,red); }
+        .O-CCW {background: -webkit-linear-gradient(right,white,orange); }
+        .O-CW {background: -webkit-linear-gradient(left,white,orange); }
+        .Y-CCW {background: -webkit-linear-gradient(right,white,yellow); }
+        .Y-CW {background: -webkit-linear-gradient(left,white,yellow); }
+        
+        .btHd {font-size:0.8em;font-weight:bold;vertical-align:middle; text-align:center; margin:5%; }
+        .subTitle {font-size:0.8em;font-weight:bold;}
+        .borderTop {border: 1px black solid; border-width:1px 0 0 0; }
+        .centerText {text-align:center; }
+        .rightText {text-align:right; }
+        /* ============================== cube setting ============================== */
+        .cubeClass {
+            width:100px; height: 100px; display:block; margin:270px auto 180px auto; position:relative;
+            -webkit-perspective:none;
+            -webkit-transform-style: preserve-3d;
+            -webkit-transform: rotate3d(1,1,0,-30deg) rotate3d(1,0,0,90deg) ;
+            -webkit-transition: all 150ms ease-in-out;
+            perspective:none;
+            transform-style: preserve-3d;
+            transform: rotate3d(1,1,0,-30deg) rotate3d(1,0,0,90deg) ;
+            transition: all 150ms ease-in-out; }
+        .cubeClass div {
+            box-sizing: border-box;
+            width:100%;
+            height:100%;
+            position:absolute;
+            -webkit-transform-style:preserve-3d; transform-style:preserve-3d;
+            font-size:xx-large ; }
+        /* unit cube: shape */
+        .ucShape {border: solid black 4px; border-radius:20px; }
+        /* unit cube: color attributes  */
+        .red {background-color: red; }
+        .orange {background-color: orange; }
+        .green {background-color: green; }
+        .blue {background-color: blue; }
+        .white {background-color: white; }
+        .yellow {background-color: yellow; }
+        .black {background-color: black; }
+        /* unit cube: position setting of 6 faces */
+        /*matrix3d座標軸方向: X:(藍色right(+X)螢幕平面之右、Z:(白色up(+Z)螢幕平面之上、Y:(紅色front(+Y)垂直螢幕出來向自己方向 
+        X90=[1,0,0,0,   0,0,-1,0,   0,1,0,0,    0,0,0,1];   Xn90=[1,0,0,0,   0,0,1,0,    0,-1,0,0,   0,0,0,1];
+        Y90=[0,0,1,0,   0,1,0,0,    -1,0,0,0,   0,0,0,1];   Yn90=[0,0,-1,0,  0,1,0,0,    1,0,0,0,    0,0,0,1];
+        Z90=[0,-1,0,0,  1,0,0,0,    0,0,1,0,    0,0,0,1];   Zn90=[0,1,0,0,   -1,0,0,0,   0,0,1,0,    0,0,0,1];
+
+        X180=[1,0,0,0,   0,-1,0,0,   0,0,-1,0,  0,0,0,1];  UnitM = [1,0,0,0,  0,1,0,0,  0,0,1,0,  0,0,0,1];
+        Y180=[-1,0,0,0,  0,1,0,0,    0,0,-1,0,  0,0,0,1];
+        Z180=[-1,0,0,0,  0,-1,0,0,   0,0,1,0,   0,0,0,1];
+        */
+        .fsUp   {-webkit-transform: matrix3d(1,0,0,0,   0,1,0,0,   0,0,1,0,   0,0,+50,1);
+                         transform: matrix3d(1,0,0,0,   0,1,0,0,   0,0,1,0,   0,0,+50,1); } /* X轉0, Z移+50 */
+        .fsDown {-webkit-transform: matrix3d(1,0,0,0,   0,-1,0,0,  0,0,-1,0,  0,0,-50,1);
+                         transform: matrix3d(1,0,0,0,   0,-1,0,0,  0,0,-1,0,  0,0,-50,1); } /* X轉180, Z移-50 */
+        .fsFront{-webkit-transform: matrix3d(1,0,0,0,   0,0,-1,0,  0,1,0,0,   0,+50,0,1);
+                         transform: matrix3d(1,0,0,0,   0,0,-1,0,  0,1,0,0,   0,+50,0,1); } /* X轉+90, Y移+50 */
+        .fsBack {-webkit-transform: matrix3d(1,0,0,0,   0,0,1,0,   0,-1,0,0,  0,-50,0,1);
+                         transform: matrix3d(1,0,0,0,   0,0,1,0,   0,-1,0,0,  0,-50,0,1); } /* X轉-90, Y移-50 */
+        .fsLeft {-webkit-transform: matrix3d(0,0,1,0,   0,1,0,0,   -1,0,0,0,  -50,0,0,1);
+                         transform: matrix3d(0,0,1,0,   0,1,0,0,   -1,0,0,0,  -50,0,0,1); } /* Y轉+90, X移-50 */
+        .fsRight{-webkit-transform: matrix3d(0,0,-1,0,  0,1,0,0,   1,0,0,0,   +50,0,0,1); 
+                         transform: matrix3d(0,0,-1,0,  0,1,0,0,   1,0,0,0,   +50,0,0,1); } /* Y轉-90, X移+50 */
+
+        /* 1st_Layer of 27 unit cubes*/
+        .cb01 {-webkit-transform: matrix3d(1,0,0,0,   0,1,0,0,   0,0,1,0,   -100,   +100,   +100,   1);
+                       transform: matrix3d(1,0,0,0,   0,1,0,0,   0,0,1,0,   -100,   +100,   +100,   1);}
+        .cb02 {-webkit-transform: matrix3d(1,0,0,0,   0,1,0,0,   0,0,1,0,   0,      +100,   +100,   1);
+                       transform: matrix3d(1,0,0,0,   0,1,0,0,   0,0,1,0,   0,      +100,   +100,   1);}
+        .cb03 {-webkit-transform: matrix3d(1,0,0,0,   0,1,0,0,   0,0,1,0,   +100,   +100,   +100,   1);
+                       transform: matrix3d(1,0,0,0,   0,1,0,0,   0,0,1,0,   +100,   +100,   +100,   1);}
+        .cb04 {-webkit-transform: matrix3d(1,0,0,0,   0,1,0,0,   0,0,1,0,   -100,   0,      +100,   1);
+                       transform: matrix3d(1,0,0,0,   0,1,0,0,   0,0,1,0,   -100,   0,      +100,   1);}
+        .cb05 {-webkit-transform: matrix3d(1,0,0,0,   0,1,0,0,   0,0,1,0,   0,      0,      +100,   1);
+                       transform: matrix3d(1,0,0,0,   0,1,0,0,   0,0,1,0,   0,      0,      +100,   1);}
+        .cb06 {-webkit-transform: matrix3d(1,0,0,0,   0,1,0,0,   0,0,1,0,   +100,   0,      +100,   1);
+                       transform: matrix3d(1,0,0,0,   0,1,0,0,   0,0,1,0,   +100,   0,      +100,   1);}
+        .cb07 {-webkit-transform: matrix3d(1,0,0,0,   0,1,0,0,   0,0,1,0,   -100,   -100,   +100,   1);
+                       transform: matrix3d(1,0,0,0,   0,1,0,0,   0,0,1,0,   -100,   -100,   +100,   1);}
+        .cb08 {-webkit-transform: matrix3d(1,0,0,0,   0,1,0,0,   0,0,1,0,   0,      -100,   +100,   1);
+                       transform: matrix3d(1,0,0,0,   0,1,0,0,   0,0,1,0,   0,      -100,   +100,   1);}
+        .cb09 {-webkit-transform: matrix3d(1,0,0,0,   0,1,0,0,   0,0,1,0,   +100,   -100,   +100,   1);
+                       transform: matrix3d(1,0,0,0,   0,1,0,0,   0,0,1,0,   +100,   -100,   +100,   1);}
+        /* 2nd_Layer of 27 unit cubes*/
+        .cb11 {-webkit-transform: matrix3d(1,0,0,0,   0,1,0,0,   0,0,1,0,   -100,   +100,   0.0001,   1);
+                       transform: matrix3d(1,0,0,0,   0,1,0,0,   0,0,1,0,   -100,   +100,   0.0001,   1);}
+        .cb12 {-webkit-transform: matrix3d(1,0,0,0,   0,1,0,0,   0,0,1,0,   0,      +100,   0.0001,   1);
+                       transform: matrix3d(1,0,0,0,   0,1,0,0,   0,0,1,0,   0,      +100,   0.0001,   1);}
+        .cb13 {-webkit-transform: matrix3d(1,0,0,0,   0,1,0,0,   0,0,1,0,   +100,   +100,   0.0001,   1);
+                       transform: matrix3d(1,0,0,0,   0,1,0,0,   0,0,1,0,   +100,   +100,   0.0001,   1);}
+        .cb14 {-webkit-transform: matrix3d(1,0,0,0,   0,1,0,0,   0,0,1,0,   -100,   0,      0.0001,   1);
+                       transform: matrix3d(1,0,0,0,   0,1,0,0,   0,0,1,0,   -100,   0,      0.0001,   1);}
+        .cb15 {-webkit-transform: matrix3d(1,0,0,0,   0,1,0,0,   0,0,1,0,   0,      0,      0.0001,   1);
+                       transform: matrix3d(1,0,0,0,   0,1,0,0,   0,0,1,0,   0,      0,      0.0001,   1);}
+        .cb16 {-webkit-transform: matrix3d(1,0,0,0,   0,1,0,0,   0,0,1,0,   +100,   0,      0.0001,   1);
+                       transform: matrix3d(1,0,0,0,   0,1,0,0,   0,0,1,0,   +100,   0,      0.0001,   1);}
+        .cb17 {-webkit-transform: matrix3d(1,0,0,0,   0,1,0,0,   0,0,1,0,   -100,   -100,   0.0001,   1);
+                       transform: matrix3d(1,0,0,0,   0,1,0,0,   0,0,1,0,   -100,   -100,   0.0001,   1);}
+        .cb18 {-webkit-transform: matrix3d(1,0,0,0,   0,1,0,0,   0,0,1,0,   0,      -100,   0.0001,   1);
+                       transform: matrix3d(1,0,0,0,   0,1,0,0,   0,0,1,0,   0,      -100,   0.0001,   1);}
+        .cb19 {-webkit-transform: matrix3d(1,0,0,0,   0,1,0,0,   0,0,1,0,   +100,   -100,   0.0001,   1);
+                       transform: matrix3d(1,0,0,0,   0,1,0,0,   0,0,1,0,   +100,   -100,   0.0001,   1);}
+        /* 3rd_Layer of 27 unit cubes*/
+        .cb21 {-webkit-transform: matrix3d(1,0,0,0,   0,1,0,0,   0,0,1,0,   -100,   +100,   -100,   1);
+                       transform: matrix3d(1,0,0,0,   0,1,0,0,   0,0,1,0,   -100,   +100,   -100,   1);}
+        .cb22 {-webkit-transform: matrix3d(1,0,0,0,   0,1,0,0,   0,0,1,0,   0,      +100,   -100,   1);
+                       transform: matrix3d(1,0,0,0,   0,1,0,0,   0,0,1,0,   0,      +100,   -100,   1);}
+        .cb23 {-webkit-transform: matrix3d(1,0,0,0,   0,1,0,0,   0,0,1,0,   +100,   +100,   -100,   1);
+                       transform: matrix3d(1,0,0,0,   0,1,0,0,   0,0,1,0,   +100,   +100,   -100,   1);}
+        .cb24 {-webkit-transform: matrix3d(1,0,0,0,   0,1,0,0,   0,0,1,0,   -100,   0,      -100,   1);
+                       transform: matrix3d(1,0,0,0,   0,1,0,0,   0,0,1,0,   -100,   0,      -100,   1);}
+        .cb25 {-webkit-transform: matrix3d(1,0,0,0,   0,1,0,0,   0,0,1,0,   0,      0,      -100,   1);
+                       transform: matrix3d(1,0,0,0,   0,1,0,0,   0,0,1,0,   0,      0,      -100,   1);}
+        .cb26 {-webkit-transform: matrix3d(1,0,0,0,   0,1,0,0,   0,0,1,0,   +100,   0,      -100,   1);
+                       transform: matrix3d(1,0,0,0,   0,1,0,0,   0,0,1,0,   +100,   0,      -100,   1);}
+        .cb27 {-webkit-transform: matrix3d(1,0,0,0,   0,1,0,0,   0,0,1,0,   -100,   -100,   -100,   1);
+                       transform: matrix3d(1,0,0,0,   0,1,0,0,   0,0,1,0,   -100,   -100,   -100,   1);}
+        .cb28 {-webkit-transform: matrix3d(1,0,0,0,   0,1,0,0,   0,0,1,0,   0,      -100,   -100,   1);
+                       transform: matrix3d(1,0,0,0,   0,1,0,0,   0,0,1,0,   0,      -100,   -100,   1);}
+        .cb29 {-webkit-transform: matrix3d(1,0,0,0,   0,1,0,0,   0,0,1,0,   +100,   -100,   -100,   1);
+                       transform: matrix3d(1,0,0,0,   0,1,0,0,   0,0,1,0,   +100,   -100,   -100,   1);}
+        /* temp div for rotation purpose */
+        .tempClass {-webkit-transform: matrix3d(1,0,0,0,   0,1,0,0,   0,0,1,0,  0,0,0,1);
+                    -webkit-transition: all 150ms ease-in-out; 
+                    transform: matrix3d(1,0,0,0,   0,1,0,0,   0,0,1,0,  0,0,0,1);
+                    transition: all 150ms ease-in-out;  }
+        .fooClass {-webkit-transform: matrix3d(1,0,0,0,   0,1,0,0,   0,0,1,0,  0,0,0,1);
+                    -webkit-transition: none; 
+                    transform: matrix3d(1,0,0,0,   0,1,0,0,   0,0,1,0,  0,0,0,1);
+                    transition: none;  }
+    </style>
+</head>
+<body>
+    <table border="1" class="tbl">
+        <thead></thead>
+        <tbody>
+            <tr height=15% class="tbltr12">
+                <td colspan=3 rowspan=2 width=60% style="font-size:1.4em; text-align:center;">
+                    Rubik's Cube Everywhere! 
+                <span style="color:red;"> --- WCA Rules </span>
+                </td>
+                <td width="12%">程式名稱</td>   
+                <td width="12%">作者</td>   
+                <td width="12%">日期</td>            
+            </tr>
+            <tr height=5% class="tbltr12" style="font-size:0.8em;font-weight:normal;line-height:0.9em;">
+                <td>t9-06.py</td>   <td>桃園高中 117班<br/>白昕宸</td><td>2021/7/25</td>            
+            </tr>
+            <tr height=2% style="border:2px black solid;line-height:2em;text-align:center;">            
+                <td Class="tbltr3">Game Console:</td>
+                <td id="ETM" Class="tbltr3" style="color:red;">ETM = 0 次</td>
+                <td id="OBTM" Class="tbltr3" style="color:red;">OBTM = 0 次</td>
+                <td colspan=3 Class="tbltr3">Game Controls:</td>               
+            </tr>            
+            <tr height=88% >
+                <td colspan=3 rowspan=15 id="gameConsole">
+                    <button  onclick="location.href='howToPlay.html'">
+                        How To Play
+                    </button>                    
+                    <div style="color:red; font-size:1em; float:right;" id="CapsLockIsOn"></div>
+                    <!-- ===== Rubik's cube area : START ===== -->
+                    <div id="cube" class="cubeClass">
+                        <!-- Layer-1 -->
+                        <div id="Cube01" class="cb01">
+                            <div id="01F" class="red ucShape fsFront"></div>    <div id="01B" class="black ucShape fsBack"></div>
+                            <div id="01L" class="green ucShape fsLeft"></div>   <div id="01R" class="black ucShape fsRight"></div>
+                            <div id="01U" class="white ucShape fsUp"></div>     <div id="01D" class="black ucShape fsDown"></div>
+                        </div>
+                        <div id="Cube02" class="cb02">
+                            <div id="02F" class="red ucShape fsFront"></div>    <div id="02B" class="black ucShape fsBack"></div>
+                            <div id="02L" class="black ucShape fsLeft"></div>   <div id="02R" class="black ucShape fsRight"></div>
+                            <div id="02U" class="white ucShape fsUp"></div>     <div id="02D" class="black ucShape fsDown"></div>
+                        </div>
+                        <div id="Cube03" class="cb03">
+                            <div id="03F" class="red ucShape fsFront"></div>    <div id="03B" class="black ucShape fsBack"></div>
+                            <div id="03L" class="black ucShape fsLeft"></div>   <div id="03R" class="blue ucShape fsRight"></div>
+                            <div id="03U" class="white ucShape fsUp"></div>     <div id="03D" class="black ucShape fsDown"></div>
+                        </div>
+                        <div id="Cube04" class="cb04">
+                            <div id="04F" class="black ucShape fsFront"></div>  <div id="04B" class="black ucShape fsBack"></div>
+                            <div id="04L" class="green ucShape fsLeft"></div>   <div id="04R" class="black ucShape fsRight"></div>
+                            <div id="04U" class="white ucShape fsUp"></div>     <div id="04D" class="black ucShape fsDown"></div>
+                        </div>
+                        <div id="Cube05" class="cb05">
+                            <div id="05F" class="black ucShape fsFront"></div>  <div id="05B" class="black ucShape fsBack"></div>
+                            <div id="05L" class="black ucShape fsLeft"></div>   <div id="05R" class="black ucShape fsRight"></div>
+                            <div id="05U" class="white ucShape fsUp"></div>     <div id="05D" class="black ucShape fsDown"></div>
+                        </div>
+                        <div id="Cube06" class="cb06">
+                            <div id="06F" class="black ucShape fsFront"></div>  <div id="06B" class="black ucShape fsBack"></div>
+                            <div id="06L" class="black ucShape fsLeft"></div>   <div id="06R" class="blue ucShape fsRight"></div>
+                            <div id="06U" class="white ucShape fsUp"></div>     <div id="06D" class="black ucShape fsDown"></div>
+                        </div>
+                        <div id="Cube07" class="cb07">
+                            <div id="07F" class="black ucShape fsFront"></div>  <div id="07B" class="orange ucShape fsBack"></div>
+                            <div id="07L" class="green ucShape fsLeft"></div>   <div id="07R" class="black ucShape fsRight"></div>
+                            <div id="07U" class="white ucShape fsUp"></div>     <div id="07D" class="black ucShape fsDown"></div>
+                        </div>
+                        <div id="Cube08" class="cb08">
+                            <div id="08F" class="black ucShape fsFront"></div>  <div id="08B" class="orange ucShape fsBack"></div>
+                            <div id="08L" class="black ucShape fsLeft"></div>   <div id="08R" class="black ucShape fsRight"></div>
+                            <div id="08U" class="white ucShape fsUp"></div>     <div id="08D" class="black ucShape fsDown"></div>
+                        </div>
+                        <div id="Cube09" class="cb09">
+                            <div id="09F" class="black ucShape fsFront"></div>  <div id="09B" class="orange ucShape fsBack"></div>
+                            <div id="09L" class="black ucShape fsLeft"></div>   <div id="09R" class="blue ucShape fsRight"></div>
+                            <div id="09U" class="white ucShape fsUp"></div>     <div id="09D" class="black ucShape fsDown"></div>
+                        </div>                
+                        <!-- Layer-2 -->
+                        <div id="Cube11" class="cb11">
+                            <div id="11F" class="red ucShape fsFront"></div>    <div id="11B" class="black ucShape fsBack"></div>
+                            <div id="11L" class="green ucShape fsLeft"></div>   <div id="11R" class="black ucShape fsRight"></div>
+                            <div id="11U" class="black ucShape fsUp"></div>     <div id="11D" class="black ucShape fsDown"></div>
+                        </div>
+                        <div id="Cube12" class="cb12">
+                            <div id="12F" class="red ucShape fsFront"></div>    <div id="12B" class="black ucShape fsBack"></div>
+                            <div id="12L" class="black ucShape fsLeft"></div>   <div id="12R" class="black ucShape fsRight"></div>
+                            <div id="12U" class="black ucShape fsUp"></div>     <div id="12D" class="black ucShape fsDown"></div>
+                        </div>
+                        <div id="Cube13" class="cb13">
+                            <div id="13F" class="red ucShape fsFront"></div>    <div id="13B" class="black ucShape fsBack"></div>
+                            <div id="13L" class="black ucShape fsLeft"></div>   <div id="13R" class="blue ucShape fsRight"></div>
+                            <div id="13U" class="black ucShape fsUp"></div>     <div id="13D" class="black ucShape fsDown"></div>
+                        </div>
+                        <div id="Cube14" class="cb14">
+                            <div id="14F" class="black ucShape fsFront"></div>  <div id="14B" class="black ucShape fsBack"></div>
+                            <div id="14L" class="green ucShape fsLeft"></div>   <div id="14R" class="black ucShape fsRight"></div>
+                            <div id="14U" class="black ucShape fsUp"></div>     <div id="14D" class="black ucShape fsDown"></div>
+                        </div>
+                        <div id="Cube15" class="cb15">
+                            <div id="15F" class="black ucShape fsFront"></div>  <div id="15B" class="black ucShape fsBack"></div>
+                            <div id="15L" class="black ucShape fsLeft"></div>   <div id="15R" class="black ucShape fsRight"></div>
+                            <div id="15U" class="black ucShape fsUp"></div>     <div id="15D" class="yellow ucShape fsDown"></div>
+                        </div>
+                        <div id="Cube16" class="cb16">
+                            <div id="16F" class="black ucShape fsFront"></div>  <div id="16B" class="black ucShape fsBack"></div>
+                            <div id="16L" class="black ucShape fsLeft"></div>   <div id="16R" class="blue ucShape fsRight"></div>
+                            <div id="16U" class="black ucShape fsUp"></div>     <div id="16D" class="yellow ucShape fsDown"></div>
+                        </div>
+                        <div id="Cube17" class="cb17">
+                            <div id="17F" class="black ucShape fsFront"></div>  <div id="17B" class="orange ucShape fsBack"></div>
+                            <div id="17L" class="green ucShape fsLeft"></div>   <div id="17R" class="black ucShape fsRight"></div>
+                            <div id="17U" class="black ucShape fsUp"></div>     <div id="17D" class="yellow ucShape fsDown"></div>
+                        </div>
+                        <div id="Cube18" class="cb18">
+                            <div id="18F" class="black ucShape fsFront"></div>  <div id="18B" class="orange ucShape fsBack"></div>
+                            <div id="18L" class="black ucShape fsLeft"></div>   <div id="18R" class="black ucShape fsRight"></div>
+                            <div id="18U" class="black ucShape fsUp"></div>     <div id="18D" class="yellow ucShape fsDown"></div>
+                        </div>
+                        <div id="Cube19" class="cb19">
+                            <div id="19F" class="black ucShape fsFront"></div>  <div id="19B" class="orange ucShape fsBack"></div>
+                            <div id="19L" class="black ucShape fsLeft"></div>   <div id="19R" class="blue ucShape fsRight"></div>
+                            <div id="19U" class="black ucShape fsUp"></div>     <div id="19D" class="yellow ucShape fsDown"></div>
+                        </div>               
+                        <!-- Layer-3 -->
+                        <div id="Cube21" class="cb21">
+                            <div id="21F" class="red ucShape fsFront"></div>    <div id="21B" class="black ucShape fsBack"></div>
+                            <div id="21L" class="green ucShape fsLeft"></div>   <div id="21R" class="black ucShape fsRight"></div>
+                            <div id="21U" class="black ucShape fsUp"></div>     <div id="21D" class="yellow ucShape fsDown"></div>
+                        </div>
+                        <div id="Cube22" class="cb22">
+                            <div id="22F" class="red ucShape fsFront"></div>    <div id="22B" class="black ucShape fsBack"></div>
+                            <div id="22L" class="black ucShape fsLeft"></div>   <div id="22R" class="black ucShape fsRight"></div>
+                            <div id="22U" class="black ucShape fsUp"></div>     <div id="22D" class="yellow ucShape fsDown"></div>
+                        </div>
+                        <div id="Cube23" class="cb23">
+                            <div id="23F" class="red ucShape fsFront"></div>    <div id="23B" class="black ucShape fsBack"></div>
+                            <div id="23L" class="black ucShape fsLeft"></div>   <div id="23R" class="blue ucShape fsRight"></div>
+                            <div id="23U" class="black ucShape fsUp"></div>     <div id="23D" class="yellow ucShape fsDown"></div>
+                        </div>
+                        <div id="Cube24" class="cb24">
+                            <div id="24F" class="black ucShape fsFront"></div>  <div id="24B" class="black ucShape fsBack"></div>
+                            <div id="24L" class="green ucShape fsLeft"></div>   <div id="24R" class="black ucShape fsRight"></div>
+                            <div id="24U" class="black ucShape fsUp"></div>     <div id="24D" class="yellow ucShape fsDown"></div>
+                        </div>
+                        <div id="Cube25" class="cb25">
+                            <div id="25F" class="black ucShape fsFront"></div>  <div id="25B" class="black ucShape fsBack"></div>
+                            <div id="25L" class="black ucShape fsLeft"></div>   <div id="25R" class="black ucShape fsRight"></div>
+                            <div id="25U" class="black ucShape fsUp"></div>     <div id="25D" class="yellow ucShape fsDown"></div>
+                        </div>
+                        <div id="Cube26" class="cb26">
+                            <div id="26F" class="black ucShape fsFront"></div>  <div id="26B" class="black ucShape fsBack"></div>
+                            <div id="26L" class="black ucShape fsLeft"></div>   <div id="26R" class="blue ucShape fsRight"></div>
+                            <div id="26U" class="black ucShape fsUp"></div>     <div id="26D" class="yellow ucShape fsDown"></div>
+                        </div>
+                        <div id="Cube27" class="cb27">
+                            <div id="27F" class="black ucShape fsFront"></div>  <div id="27B" class="orange ucShape fsBack"></div>
+                            <div id="27L" class="green ucShape fsLeft"></div>   <div id="27R" class="black ucShape fsRight"></div>
+                            <div id="27U" class="black ucShape fsUp"></div>     <div id="27D" class="yellow ucShape fsDown"></div>
+                        </div>
+                        <div id="Cube28" class="cb28">
+                            <div id="28F" class="black ucShape fsFront"></div>  <div id="28B" class="orange ucShape fsBack"></div>
+                            <div id="28L" class="black ucShape fsLeft"></div>   <div id="28R" class="black ucShape fsRight"></div>
+                            <div id="28U" class="black ucShape fsUp"></div>     <div id="28D" class="yellow ucShape fsDown"></div>
+                        </div>
+                        <div id="Cube29" class="cb29">
+                            <div id="29F" class="black ucShape fsFront"></div>  <div id="29B" class="orange ucShape fsBack"></div>
+                            <div id="29L" class="black ucShape fsLeft"></div>   <div id="29R" class="blue ucShape fsRight"></div>
+                            <div id="29U" class="black ucShape fsUp"></div>     <div id="29D" class="yellow ucShape fsDown"></div>
+                        </div>        
+                    </div>
+                    <!-- ===== Rubik's cube area : END ===== -->
+                    <div style="font-size:0.5em;color:gray;position: relative; top:0px;left:0px;float:left; width:80%; top:0;left:0;">
+                            ※          ※          ※
+                    </div>
+                </td>
+                <td colspan=3 rowspan=15>
+                    <!-- ===== Game control area: start ===== -->
+                    <table id="gameControl" style="height:40%; width:100%;border-collapse: collapse;table-layout:fixed;">
+                    <tbody>
+                        <tr>
+                            <td class="subTitle">啟動模式</td>
+                            <td colspan=2 class="subTitle rightText">轉動速度
+                                <input style="width:4em; text-align:right;" 
+                                       id="rotSpeed" name="rotSpeedNo" type=number value=150 min=10 max=5000 /><span> ms</span>
+                            </td>                            
+                        </tr>
+                        <tr>
+                            <td class="subTitle centerText" >
+                                <button  onclick="location.href='rubiksGame.html'">
+                                    規則模式
+                                </button>
+                            </td>
+                            <td colspan=2 class="subTitle centerText">
+                                <button  onclick=scramble()>轉亂模式</button>
+                                <!-- <form  class="centerText" method='POST' action="https://eugenepai.github.io/t906/rubiksGame.html"> -->
+                                    <!-- <button type=submit>轉亂模式</button> -->
+                                    <input style="width:4em; text-align:right;"
+                                           id="scrambleTurns" name="scrambledNo" type=number value=32 min=0 max=100 />
+                                    <span> 次</span>
+                                <!-- </form> -->
+                            </td>
+                        </tr>
+                        <!-- ------------------------------------------------------------ -->
+                        <tr>
+                            <td colspan=3 class="subTitle borderTop">整顆方塊轉動 Rotations</td>
+                        </tr>
+                        <tr>
+                            <td class="btHd">轉180度</td> <td class="btHd">逆時針90度</td> <td class="btHd">順時針90度</td>
+                        </tr>
+                        <tr>
+                            <td class="btHd"><button class="plainCtrl" onclick=push2Rotate(12,-100,3,X180)>X2</button></td>
+                            <td class="btHd"><button class="plainCtrl G-CCW" onclick=push2Rotate(12,-100,3,X90)>X'(R')</button></td>
+                            <td class="btHd"><button class="plainCtrl B-CW" onclick=push2Rotate(12,100,3,Xn90)>X (R)</button></td>
+                        </tr>
+                        <tr>
+                             <td class="btHd"><button class="plainCtrl" onclick=push2Rotate(14,-100,3,Z180)>Y2</button></td>
+                             <td class="btHd"><button class="plainCtrl Y-CCW" onclick=push2Rotate(14,-100,3,Z90)>Y'(U')</button></td>
+                             <td class="btHd"><button class="plainCtrl W-CW " onclick=push2Rotate(14,100,3,Zn90)>Y(U)</button></td>
+                        </tr>
+                        <tr>
+                             <td class="btHd"><button class="plainCtrl" onclick=push2Rotate(13,-100,3,Y180)>Z2</button></td>
+                             <td class="btHd"><button class="plainCtrl O-CCW" onclick=push2Rotate(13,-100,3,Y90)>Z'(F')</button></td>
+                             <td class="btHd"><button class="plainCtrl R-CW" onclick=push2Rotate(13,100,3,Yn90)>Z(F)</button></td>
+                        </tr>
+                    </tbody>
+                    </table>                       
+                    <!-- --------------------------------------------------------------------------------- -->                        
+                    <table id="faceMoveControl" style="height:60%; width:100%;border-collapse: collapse;table-layout:fixed;">
+                    <tbody>
+                        <tr>
+                            <td colspan=3 class="subTitle borderTop">最外層轉動 Face moves -- <b>Click</b> & <br/>
+                                                                     多層轉動 Outer block moves -- <b>Swipe</b>
+                            </td>  
+                        </tr>
+                        <tr>
+                            <td class="btHd">轉180度</td><td class="btHd">逆時針90度</td><td class="btHd">順時針90度</td>
+                        </tr>
+                        <tr>
+                            <td class="btHd">
+                                <button id="U2" onclick=push2Rotate(14,100,1,Z180) class="plainCtrl">U2</button>
+                                <button id="U22" onclick=push2Rotate(14,100,2,Z180) class="beHidden">U2</button>
+                            </td>
+                            <td class="btHd">
+                                <button id="UCCW" onclick=push2Rotate(14,100,1,Z90) class="plainCtrl W-CCW">U'</button>
+                                <button id="UCCW2" onclick=push2Rotate(14,100,2,Z90) class="beHidden">U'</button>
+                            </td>
+                            <td class="btHd">
+                                <button id="UCW" onclick=push2Rotate(14,100,1,Zn90) class="plainCtrl W-CW">U</button>
+                                <button id="UCW2" onclick=push2Rotate(14,100,2,Zn90) class="beHidden">U</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="btHd">
+                                <button id="F2" onclick=push2Rotate(13,100,1,Y180) class="plainCtrl">F2</button>
+                                <button id="F22" onclick=push2Rotate(13,100,2,Y180) class="beHidden">F2</button>
+                            </td>
+                            <td class="btHd">
+                                <button id="FCCW" onclick=push2Rotate(13,100,1,Y90) class="plainCtrl R-CCW">F'</button>
+                                <button id="FCCW2" onclick=push2Rotate(13,100,2,Y90) class="beHidden">F'</button>
+                            </td>
+                            <td class="btHd">
+                                <button id="FCW" onclick=push2Rotate(13,100,1,Yn90) class="plainCtrl R-CW">F</button>
+                                <button id="FCW2" onclick=push2Rotate(13,100,2,Yn90) class="beHidden">F</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="btHd">
+                                <button id="R2" onclick=push2Rotate(12,100,1,X180) class="plainCtrl">R2</button>
+                                <button id="R22" onclick=push2Rotate(12,100,2,X180) class="beHidden">R2</button>
+                            </td>
+                            <td class="btHd">
+                                <button id="RCCW" onclick=push2Rotate(12,100,1,X90) class="plainCtrl B-CCW">R'</button>
+                                <button id="RCCW2" onclick=push2Rotate(12,100,2,X90) class="beHidden">R'</button>
+                            </td>
+                            <td class="btHd">
+                                <button id="RCW" onclick=push2Rotate(12,100,1,Xn90) class="plainCtrl B-CW">R</button>
+                                <button id="RCW2" onclick=push2Rotate(12,100,2,Xn90) class="beHidden">R</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="btHd">
+                                <button id="D2" onclick=push2Rotate(14,-100,1,Z180) class="plainCtrl">D2</button>
+                                <button id="D22" onclick=push2Rotate(14,-100,2,Z180) class="beHidden">D2</button>
+                            </td>
+                            <td class="btHd">
+                                <button id="DCCW" onclick=push2Rotate(14,-100,1,Zn90) class="plainCtrl Y-CCW">D'</button>
+                                <button id="DCCW2" onclick=push2Rotate(14,-100,2,Zn90) class="beHidden">D'</button>
+                            </td>
+                            <td class="btHd">
+                                <button id="DCW" onclick=push2Rotate(14,-100,1,Z90) class="plainCtrl Y-CW">D</button>
+                                <button id="DCW2" onclick=push2Rotate(14,-100,2,Z90) class="beHidden">D</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="btHd">
+                                <button id="B2" onclick=push2Rotate(13,-100,1,Y180) class="plainCtrl">B2</button>
+                                <button id="B22" onclick=push2Rotate(13,-100,2,Y180) class="beHidden">B2</button>
+                            </td>
+                            <td class="btHd">
+                                <button id="BCCW" onclick=push2Rotate(13,-100,1,Yn90) class="plainCtrl O-CCW">B'</button>
+                                <button id="BCCW2" onclick=push2Rotate(13,-100,2,Yn90) class="beHidden">B'</button>
+                            </td>
+                            <td class="btHd">
+                                <button id="BCW" onclick=push2Rotate(13,-100,1,Y90) class="plainCtrl O-CW">B</button>
+                                <button id="BCW2" onclick=push2Rotate(13,-100,2,Y90) class="beHidden">B</button>
+                            </td>
+                        </tr>
+                        <tr>
+                             <td class="btHd">
+                                <button id="L2" onclick=push2Rotate(12,-100,1,X180) class="plainCtrl">L2</button>
+                                <button id="L22" onclick=push2Rotate(12,-100,2,X180) class="beHidden">L2</button>
+                            </td>
+                             <td class="btHd">
+                                <button id="LCCW" onclick=push2Rotate(12,-100,1,Xn90) class="plainCtrl G-CCW">L'</button>
+                                <button id="LCCW2" onclick=push2Rotate(12,-100,2,Xn90) class="beHidden">L'</button>
+                            </td>
+                             <td class="btHd">
+                                <button id="LCW" onclick=push2Rotate(12,-100,1,X90) class="plainCtrl G-CW">L</button>
+                                <button id="LCW2" onclick=push2Rotate(12,-100,2,X90) class="beHidden">L</button>
+                            </td>
+                        </tr>                    
+                    <!-- ---------------------------------------------------- -->
+                    </tbody>
+                    </table>
+                    <!-- ===== Game control area: end ===== -->
+                </td>
+            </tr>
+        </tbody>
+    </table>
+<!-- **************************javascript & jQuery ********************************** -->
+<script>
+    // define quaterion parameter of matrix3d transform
+    X90=[1,0,0,0,   0,0,-1,0,   0,1,0,0,    0,0,0,1];   Xn90=[1,0,0,0,   0,0,1,0,    0,-1,0,0,   0,0,0,1];
+    Y90=[0,0,1,0,   0,1,0,0,    -1,0,0,0,   0,0,0,1];   Yn90=[0,0,-1,0, 0,1,0,0,    1,0,0,0,    0,0,0,1];
+    Z90=[0,-1,0,0,  1,0,0,0,    0,0,1,0,    0,0,0,1];   Zn90=[0,1,0,0,   -1,0,0,0,   0,0,1,0,    0,0,0,1];
+
+    X180=[1,0,0,0,   0,-1,0,0,   0,0,-1,0,  0,0,0,1];  UnitM = [1,0,0,0,   0,1,0,0,    0,0,1,0,    0,0,0,1];
+    Y180=[-1,0,0,0,  0,1,0,0,    0,0,-1,0,  0,0,0,1];
+    Z180=[-1,0,0,0,  0,-1,0,0,   0,0,1,0,   0,0,0,1];
+
+    // get major DOM Elements
+    var body = $('body');
+    var cube = $('#cube');
+
+    //All Cubes pieces List
+    cubeList = ['#Cube01','#Cube02','#Cube03',  '#Cube04','#Cube05','#Cube06',  '#Cube07','#Cube08','#Cube09',
+                '#Cube11','#Cube12','#Cube13',  '#Cube14','#Cube15','#Cube16',  '#Cube17','#Cube18','#Cube19',
+                '#Cube21','#Cube22','#Cube23',  '#Cube24','#Cube25','#Cube26',  '#Cube27','#Cube28','#Cube29'];
+
+//==========================  Rotation Moves =============================================================
+    //  push cube pieces to a temp div (cube face), rotate it, then push back after rotation
+    OBTM = 0;
+    ETM =0;
+    function push2Rotate(XYZ,pos,rotLayers,rot){
+        lockState = "Locked";
+        if (rotLayers !=3 ) { OBTM++ };
+        $('#OBTM').text(" OBTM = " + OBTM + " 次" );
+        ETM++
+        $('#ETM').text(" ETM = " + ETM + " 次" );
+        // push cube to tempDiv
+        $("#cube").append($("<div></div>").attr('id','tempId').addClass("tempClass"));
+        var tempDiv =$("#tempId");
+        $.each(cubeList, function(index, item) {
+            var tempArr = $(item).css('-transform').split(',');
+            // 1-layers move
+            if ( parseInt(tempArr[XYZ],10)=== pos )   { $(item).appendTo(tempDiv); };
+            // 2-layers move
+            if ( Math.abs(parseInt(tempArr[XYZ],10))=== rotLayers-2 )   { $(item).appendTo(tempDiv); };
+            // 3-layers move
+            if ( rotLayers === 3 )   { $(item).appendTo(tempDiv); };
+        });
+        
+        // transition speed setting
+        var transitionSpeedSetting = "all " + $("#rotSpeed").val() + "ms ease-in-out" ;
+        tempDiv.css("-transition", transitionSpeedSetting);
+
+        // update cube css to rotate, then back to original div (listen to transitioned event)
+        tempDiv.css("-transform",tempDiv.css("-transform") + "matrix3d(" +rot+ ")");          
+        tempDiv.on( 'transitionend webkitTransitionEnd',function() {
+            var tempDivChild = tempDiv.children("div");
+            $.each(tempDivChild, function(index, item) {             
+                $(item).css('-transform', tempDiv.css('-transform') + $(item).css('-transform'));
+                $(item).appendTo(cube);
+            });
+            tempDiv.remove();
+            lockState = "unLocked";
+        });
+    };
+//===============================  Scramble ================================================
+    // push - rotate - pull back, W/O TRANSITION EFFECT when run scrambling
+    // Load no of turns to scramble from html input box
+    // window.addEventListener('load', (event) => {  scramble(); });
+    // Rotate Moves
+    function push2RotateNoTransition(XYZ,pos,faceDiv,rot) {
+        lockState = "Locked";
+        // push cube to tempDiv
+        $("#cube").append($("<div></div>").attr('id','tempId').addClass("tempClass"));
+        $(".tempClass").css("transition","none"); //stop transition effect temporarily, removed when tempDiv removed
+        var tempDiv =$("#tempId");
+        $.each(cubeList, function(index, item) {
+            var tempArr = $(item).css('-transform').split(',');
+            if ( $.trim(tempArr[XYZ])=== pos.toString())   { $(item).appendTo(tempDiv); };
+        });
+        // update cube css, back to original div (w/o transitioned event)
+        var faceDivTemp = tempDiv.css("-transform");
+        tempDiv.css("-transform",tempDiv.css("-transform") + "matrix3d(" +rot+ ")");
+        var tempDivChild = tempDiv.children("div");
+        $.each(tempDivChild, function(index, item) {             
+            $(item).css('-transform', tempDiv.css('-transform') + $(item).css('-transform'));
+            $(item).appendTo(cube);                    
+        });
+        tempDiv.remove();
+        lockState = "unLocked";
+    };
+    // way of scrambling from chosen random number repeatedly
+    function scramble() {
+        var turns=$("#scrambleTurns").val();
+        $('#cubeMode').text("模式　=　轉亂模式");
+        OBTM = 0;
+        ETM = 0;
+        $('#OBTM').text(" OBTM = " + OBTM + " 次" );
+        $('#ETM').text(" ETM = " + ETM + " 次" );
+        var keys = ["l","L","r","R","f","F","b","B","u","U","d","D",];
+        i=0;
+        do {
+            if (lockState === "unLocked") {
+                var randNo = Math.floor(Math.random()*12);
+                if      (keys[randNo] === "l")  { push2RotateNoTransition(12,-100,1,X90);  }
+                else if (keys[randNo] === "L")  { push2RotateNoTransition(12,-100,1,Xn90); }
+                else if (keys[randNo] === "r")  { push2RotateNoTransition(12,100,1,Xn90); }
+                else if (keys[randNo] === "R")  { push2RotateNoTransition(12,100,1,X90);  }
+                else if (keys[randNo] === "u")  { push2RotateNoTransition(14,100,1,Zn90); }
+                else if (keys[randNo] === "U")  { push2RotateNoTransition(14,100,1,Z90);  }
+                else if (keys[randNo] === "d")  { push2RotateNoTransition(14,-100,1,Z90);  }
+                else if (keys[randNo] === "D")  { push2RotateNoTransition(14,-100,1,Zn90); }
+                else if (keys[randNo] === "f")  { push2RotateNoTransition(13,100,1,Yn90); }
+                else if (keys[randNo] === "F")  { push2RotateNoTransition(13,100,1,Y90);  }
+                else if (keys[randNo] === "b")  { push2RotateNoTransition(13,-100,1,Y90);  }
+                else if (keys[randNo] === "B")  { push2RotateNoTransition(13,-100,1,Yn90); }
+                i++;
+            };
+        }
+        while (i < turns);
+    };
+//==============  Keyboard event ===============================================================
+    //keyboard event to rotate cubes, and change view angle
+    lockState = "unLocked";
+    $(function(){ 
+        $("body").keydown(function(e){
+            if (event.getModifierState("CapsLock")) 
+                {document.getElementById("CapsLockIsOn").innerHTML = "CapsLock: ON";  }
+            else {document.getElementById("CapsLockIsOn").innerHTML = "";  };
+
+            // listen to keyboard in 300ms, for 2-layer moves
+            Layers = 1;
+            rotDegree = 90; 
+            timeWait = 250;
+            $("body").keydown(function(e){
+                if (e.key === "w") { Layers = 2; }
+                if (e.key === "2") { rotDegree = 180; }
+                if (e.key === "p") { Layers = 2; rotDegree = 180; }                
+            });
+            window.setTimeout(function() {
+                if (lockState === "unLocked") {                
+                    if      ( e.key === "l" && rotDegree===90 ) { push2Rotate(12,-100,Layers,X90); }
+                    else if ( e.key === "L" && rotDegree===90 ) { push2Rotate(12,-100,Layers,Xn90); }
+                    else if ( e.key === "r" && rotDegree===90 ) { push2Rotate(12,100,Layers,Xn90); }
+                    else if ( e.key === "R" && rotDegree===90 ) { push2Rotate(12,100,Layers,X90);  }
+                    else if ( e.key === "u" && rotDegree===90 ) { push2Rotate(14,100,Layers,Zn90);  }
+                    else if ( e.key === "U" && rotDegree===90 ) { push2Rotate(14,100,Layers,Z90);   }
+                    else if ( e.key === "d" && rotDegree===90 ) { push2Rotate(14,-100,Layers,Z90);  }
+                    else if ( e.key === "D" && rotDegree===90 ) { push2Rotate(14,-100,Layers,Zn90); }
+                    else if ( e.key === "f" && rotDegree===90 ) { push2Rotate(13,100,Layers,Yn90); }
+                    else if ( e.key === "F" && rotDegree===90 ) { push2Rotate(13,100,Layers,Y90);  }
+                    else if ( e.key === "b" && rotDegree===90 ) { push2Rotate(13,-100,Layers,Y90);  }
+                    else if ( e.key === "B" && rotDegree===90 ) { push2Rotate(13,-100,Layers,Yn90); }
+                    
+                    else if ( e.key === "l" && rotDegree===180 ) { push2Rotate(12,-100,Layers,X180);}
+                    else if ( e.key === "r" && rotDegree===180 ) { push2Rotate(12,100,Layers,X180); }
+                    else if ( e.key === "u" && rotDegree===180 ) { push2Rotate(14,100,Layers,Z180); }
+                    else if ( e.key === "d" && rotDegree===180 ) { push2Rotate(14,-100,Layers,Z180);}
+                    else if ( e.key === "f" && rotDegree===180 ) { push2Rotate(13,100,Layers,Y180); }
+                    else if ( e.key === "b" && rotDegree===180 ) { push2Rotate(13,-100,Layers,Y180);}
+
+                    else if ( e.key === "x" && rotDegree===90 ) { push2Rotate(12,100,3,Xn90);  }
+                    else if ( e.key === "X" && rotDegree===90 ) { push2Rotate(12,-100,3,X90);  }
+                    else if ( e.key === "y" && rotDegree===90 ) { push2Rotate(14,100,3,Zn90);  }
+                    else if ( e.key === "Y" && rotDegree===90 ) { push2Rotate(14,-100,3,Z90);  }
+                    else if ( e.key === "z" && rotDegree===90 ) { push2Rotate(13,100,3,Yn90);  }
+                    else if ( e.key === "Z" && rotDegree===90 ) { push2Rotate(13,-100,3,Y90);  }
+                  
+                    else if ( e.key === "x" && rotDegree===180 )     { push2Rotate(12,-100,3,X180); }                   
+                    else if ( e.key === "y" && rotDegree===180 )     { push2Rotate(14,-100,3,Z180); }                  
+                    else if ( e.key === "z" && rotDegree===180 )     { push2Rotate(13,-100,3,Y180); }
+
+                };
+            }, timeWait);
+        }); 
+    });
+//==============  rotation modifier ===============================================================
+    // determine roration direction as per touch start and end position 
+    function getSwipeClockwiseAndMove (tempXYZPointerDown, tempXYZPointerUp) {
+        var md12 = parseInt(tempXYZPointerDown[12],10); var mu12 = parseInt(tempXYZPointerUp[12],10);
+        var md13 = parseInt(tempXYZPointerDown[13],10); var mu13 = parseInt(tempXYZPointerUp[13],10);
+        var md14 = parseInt(tempXYZPointerDown[14],10); var mu14 = parseInt(tempXYZPointerUp[14],10);
+
+        if ( md12 === -150 || md13 === -150 || md14 === -150 ) // back side from screen eyeview
+            {rotModifier = -1; }
+        else { rotModifier = 1;}
+
+        var deltaXYZ12 =rotModifier*(mu12-md12);
+        var deltaXYZ13 =rotModifier*(mu13-md13);
+        var deltaXYZ14 =rotModifier*(mu14-md14);
+
+        if (lockState === "unLocked") { 
+            if ( md12 === mu12 && md12 === 100)   
+                {        if ( (deltaXYZ13 > 0 && deltaXYZ14 ===0) || (deltaXYZ13 ===0 && deltaXYZ14 < 0) )
+                            { push2Rotate(12,100,1,X90); }
+                    else if ( (deltaXYZ13 < 0 && deltaXYZ14 ===0) || (deltaXYZ13 ===0 && deltaXYZ14 > 0) )
+                            { push2Rotate(12,100,1,Xn90); }     
+                }
+            else if ( md12 === mu12 && md12 === 0)   
+                {        if ( (deltaXYZ13 > 0 && deltaXYZ14 ===0) || (deltaXYZ13 ===0 && deltaXYZ14 < 0) )
+                            { push2Rotate(12,100,3,X90); }
+                    else if ( (deltaXYZ13 < 0 && deltaXYZ14 ===0) || (deltaXYZ13 ===0 && deltaXYZ14 > 0) )
+                            { push2Rotate(12,100,3,Xn90); }     
+                }            
+            else if ( md12 === mu12 && md12 === -100 )   
+                {        if ( (deltaXYZ13 < 0 && deltaXYZ14 ===0) || (deltaXYZ13 ===0 && deltaXYZ14 > 0) )
+                            { push2Rotate(12,-100,1,Xn90); }
+                    else if ( (deltaXYZ13 > 0 && deltaXYZ14 ===0) || (deltaXYZ13 ===0 && deltaXYZ14 < 0) ) 
+                            { push2Rotate(12,-100,1,X90); }     
+                }
+            // ----------------------------------------------------
+            else if ( md13 === mu13 && md13 === 100 )   
+                {        if ( (deltaXYZ12 > 0 && deltaXYZ14 === 0) || (deltaXYZ12 ===0 && deltaXYZ14 < 0))
+                            { push2Rotate(13,100,1,Yn90); }
+                    else if ( (deltaXYZ12 < 0 && deltaXYZ14 === 0) || (deltaXYZ12 ===0 && deltaXYZ14 > 0)) 
+                            { push2Rotate(13,100,1,Y90);  }     
+                } 
+            else if ( md13 === mu13 && md13 === 0 )   
+                {        if ( (deltaXYZ12 > 0 && deltaXYZ14 === 0) || (deltaXYZ12 ===0 && deltaXYZ14 < 0))
+                            { push2Rotate(13,100,3,Yn90); }
+                    else if ( (deltaXYZ12 < 0 && deltaXYZ14 === 0) || (deltaXYZ12 ===0 && deltaXYZ14 > 0)) 
+                            { push2Rotate(13,100,3,Y90);  }     
+                }                     
+            else if ( md13 === mu13 && md13 === -100 )   
+                {        if ( (deltaXYZ12 < 0 && deltaXYZ14 === 0) || (deltaXYZ12 === 0 && deltaXYZ14 > 0) ) 
+                            { push2Rotate(13,-100,1,Y90); }
+                    else if ( (deltaXYZ12 > 0 && deltaXYZ14 === 0) || (deltaXYZ12 === 0 && deltaXYZ14 < 0) ) 
+                            { push2Rotate(13,-100,1,Yn90); }     
+                }
+            // ---------------------------------------------------- 
+            else if ( md14 === mu14 && md14 === 100 )   
+                {        
+                    if ( (deltaXYZ12 > 0 && deltaXYZ13 ===0) || (deltaXYZ12 ===0 && deltaXYZ13 < 0) )
+                            { push2Rotate(14,100,1,Z90); }
+                    else if ( (deltaXYZ12 < 0 && deltaXYZ13 ===0) || (deltaXYZ12 ===0 && deltaXYZ13 > 0) )
+                            { push2Rotate(14,100,1,Zn90);  }     
+                }
+            else if ( md14 === mu14 && md14 === 0 )   
+                {        
+                    if ( (deltaXYZ12 > 0 && deltaXYZ13 ===0) || (deltaXYZ12 ===0 && deltaXYZ13 < 0) )
+                            { push2Rotate(14,100,3,Z90); }
+                    else if ( (deltaXYZ12 < 0 && deltaXYZ13 ===0) || (deltaXYZ12 ===0 && deltaXYZ13 > 0) )
+                            { push2Rotate(14,100,3,Zn90);  }     
+                }
+            else if ( md14 === mu14 && md14 === -100 )   
+                {        
+                    if ( (deltaXYZ12 > 0 && deltaXYZ13 === 0) || (deltaXYZ12 ===0 && deltaXYZ13 < 0) )
+                            { push2Rotate(14,-100,1,Z90); }
+                    else if ( (deltaXYZ12 < 0 && deltaXYZ13 === 0) || (deltaXYZ12 ===0 && deltaXYZ13 > 0) )
+                            { push2Rotate(14,-100,1,Zn90); }                
+                };
+        }
+    }
+// ===== mouse rotation control =====================================================================
+    // mouse drage (click and move) -- 1-layer face move
+    function mouseDownEvent (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        $("#cube").append($("<div></div>").attr('id','foo').addClass("fooClass"));
+        $('#foo').css('-transform',$(e.target.parentNode).css('-transform') + $(e.target).css('-transform') );
+        tempXYZMouseDown = $('#foo').css('-transform').split(',');  // to be used in the next mouseUpEvent
+        $('#foo').remove();
+    }
+    document.getElementById("cube").addEventListener("mousedown",mouseDownEvent,false);
+
+    function mouseUpEvent (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        $("#cube").append($("<div></div>").attr('id','foo').addClass("fooClass"));
+        $('#foo').css('-transform',$(e.target.parentNode).css('-transform') + $(e.target).css('-transform') );
+        tempXYZMouseUp = $('#foo').css('-transform').split(',');
+        $('#foo').remove();
+        // do facemoves according to relationship between up/down target elements
+        getSwipeClockwiseAndMove (tempXYZMouseDown, tempXYZMouseUp);
+    }
+    document.getElementById("cube").addEventListener("mouseup",mouseUpEvent,false);
+    //----------------------------------------------------------------------------------------------
+    // 2 layer rotation control -- mouse click button and swipe out of the button
+    function mouseDownEvent2Layer (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        tempXYZMouseDownId= $(e.target).attr('id');
+    }
+    function mouseUpEvent2Layer (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        tempXYZMouseUpId= $(e.target).attr('id');
+        if (tempXYZMouseDownId != tempXYZMouseUpId  && lockState === "unLocked" ) {
+            document.getElementById(tempXYZMouseDownId + "2").click();
+        }
+    }
+    document.getElementById("faceMoveControl").addEventListener("mousedown",mouseDownEvent2Layer,false);
+    document.getElementById("faceMoveControl").addEventListener("mouseup",mouseUpEvent2Layer,false);
+        
+// ====== touch rotation ================================================================
+    //----------------------------------------------------------------------------------------
+    function getTouches(e) {
+        return e.touches || e.originalEvent.touches;   // browser API || jQuery
+    } 
+    function touchDownEvent (e) {
+        // e.preventDefault();
+        e.stopPropagation();
+        const firstTouch = getTouches(e)[0];
+        var elmParent = firstTouch.target.parentNode;
+        var elm = firstTouch.target;
+        $("#cube").append($("<div></div>").attr('id','foo').addClass("fooClass"));
+        $('#foo').css('-transform',$(elmParent).css('-transform') + $(elm).css('-transform') );
+        tempXYZTouchDown = $('#foo').css('-transform').split(',');
+        $('#foo').remove();
+    }
+    document.getElementById("cube").addEventListener("touchstart",touchDownEvent,false);
+
+    function touchUpEvent (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var xUp = e.touches[0].clientX;
+        var yUp = e.touches[0].clientY;
+        var elmParent = document.elementFromPoint(xUp, yUp).parentNode;
+        var elm = document.elementFromPoint(xUp, yUp);
+        $("#cube").append($("<div></div>").attr('id','foo').addClass("fooClass"));
+        $('#foo').css('-transform',$(elmParent).css('-transform') + $(elm).css('-transform') );
+        tempXYZTouchUp = $('#foo').css('-transform').split(',');
+        $('#foo').remove();        
+        // do facemoves according to relationship between up/down target elements
+        getSwipeClockwiseAndMove (tempXYZTouchDown, tempXYZTouchUp);
+    }
+    document.getElementById("cube").addEventListener("touchmove",touchUpEvent,false);
+    //----------------------------------------------------------------------------------------------
+    // 2 layer rotation control -- touch
+    function touchDownEvent2Layer (e) {
+        // e.preventDefault();
+        e.stopPropagation();
+        const firstTouch = getTouches(e)[0];
+        var elm = firstTouch.target;
+        tempXYZTouchDownId = $(elm).attr('id');
+    }
+    function touchUpEvent2Layer (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var xUp = e.touches[0].clientX;
+        var yUp = e.touches[0].clientY;
+        var elm = document.elementFromPoint(xUp, yUp);
+        tempXYZTouchUp = $(elm).attr('id');
+        if ( tempXYZTouchDownId != tempXYZTouchUp && lockState === "unLocked" ) {
+            document.getElementById(tempXYZTouchDownId + "2").click();
+        }
+    }
+    document.getElementById("faceMoveControl").addEventListener("touchstart",touchDownEvent2Layer,false);
+    document.getElementById("faceMoveControl").addEventListener("touchmove",touchUpEvent2Layer,false);
+//----------------------------------------------------------------------------------------------
+</script>
+</body>
+</html>

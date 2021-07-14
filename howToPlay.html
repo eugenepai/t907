@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Rubik's Cube Everywhere</title> 
+    <meta charset=utf-8>
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <style>
+        .button {background-color: #004A7F;
+                -webkit-border-radius: 10px; border-radius: 10px;border: none;
+                color: #FFFFFF;
+                cursor: pointer;
+                display: inline-block;
+                font-family: Arial; font-size: 1em;
+                padding: 0.2em 0.5em;
+                text-align: center;
+                text-decoration: none;
+                -webkit-animation: glowing 1500ms infinite;
+                animation: glowing 1500ms infinite;
+                }
+        @-webkit-keyframes glowing {
+        0%   { background-color: #B20000; -webkit-box-shadow: 0 0 3px #B20000; }
+        50%  { background-color: #FF0000; -webkit-box-shadow: 0 0 40px #FF0000; }
+        100% { background-color: #B20000; -webkit-box-shadow: 0 0 3px #B20000; }}
+
+        @-moz-keyframes glowing {
+        0%   { background-color: #B20000; -moz-box-shadow: 0 0 3px #B20000; }
+        50%  { background-color: #FF0000; -moz-box-shadow: 0 0 40px #FF0000; }
+        100% { background-color: #B20000; -moz-box-shadow: 0 0 3px #B20000; }}
+
+        @-o-keyframes glowing {
+        0%   { background-color: #B20000; box-shadow: 0 0 3px #B20000; }
+        50%  { background-color: #FF0000; box-shadow: 0 0 40px #FF0000; }
+        100% { background-color: #B20000; box-shadow: 0 0 3px #B20000; }}
+
+        @keyframes glowing {
+        0%   { background-color: #B20000; box-shadow: 0 0 3px #B20000; }
+        50%  { background-color: #FF0000; box-shadow: 0 0 40px #FF0000; }
+        100% { background-color: #B20000; box-shadow: 0 0 3px #B20000; }}
+
+        .tbl{border:2px black solid; width:100%; height:100%; table-layout:fixed; font-family: Arial;}
+        .tbltr12{line-height:1.2em;text-align:center;font-weight:bolder;color:black}
+        .tbltr3{font-size:1em; line-height:1.2em;text-align:left;font-weight:bold;color:black;}
+        .imgl{vertical-align:middle; text-align:center; line-height:100%;}
+        .imgp1{display:block;max-height:90%; margin:auto; padding:10% 5% 10% 5%;}
+
+        .textBold {text-align:left; font-weight: bolder;  list-style:none outside;text-indent:-2em;}
+        .textNormal {text-align:left; font-weight:normal; list-style:none outside;}
+    </style>
+</head>
+<body>
+<table border="1" class="tbl" id="tableShow">
+    <thead></thead>
+    <tbody>
+        <tr height=5% class="tbltr12">
+            <td rowspan=2 width=64% style="font-size:1em;">Rubik's Cube Everywhere! 
+                <span style="color:red;"> --- WCA Rules </span>
+            </td>
+            <td width="10%">程式名稱</td>
+            <td width="18%">作者</td>
+            <td width="8%">日期</td>            
+        </tr>
+    
+        <tr height=5% class="tbltr12" style="font-size:0.8em;font-weight:normal;">
+            <td>t9-06.py</td>            
+            <td>桃園高中 117班 白昕宸</td>
+            <td>2021/7/25</td>            
+        </tr>
+
+        <tr height=2% style="border:2px black solid;line-height:2em;text-align:center;">            
+            <td style="font-size:0.8em; font-family:serif; font-style:italic; 
+                        text-align:center; line-height:1em;">
+                <a href="https://www.worldcubeassociation.org/regulations/translations/chinese-traditional/" 
+                target="_blank" title="WCA競賽規則" style="text-decoration:underline;">[WCA 競賽規則]</a>
+                <span>　　　　</span>
+                <a href="https://www.worldcubeassociation.org/regulations/" 
+                target="_blank" title="WCARegulations" style="text-decoration:underline;">[WCA Regulations]</a>
+            <td colspan=3 Class="tbltr3">　</td>               
+        </tr>
+
+        <tr height=88% style="vertical-align:top;">
+            <td>                 
+                <ul class="textBold" style="font-size:0.8em;">
+                    <li>第12章：轉動代號</li>
+                    <li>12a) 立方體方塊的轉動代號：</li>
+                    <li>12a1) 最外層轉動(Face Moves)：
+                        <ul class="textNormal">
+                            <li>a) 順時鐘90度：F 前面、B 後面、R 右面、L 左面、U 頂面、D 底面。</li>
+                            <li>b) 逆時鐘90度：F'、B'、R'、L'、U'、D'。</li>
+                            <li>c) 180度：F2、B2、R2、L2、U2、D2。</li>
+                        </ul>
+                    </li>
+                    <li>12a2) 多層轉動(Outer Block Moves)：
+                        <ul class="textNormal">
+                            <li>a) 順時鐘90度：nFw、nBw、nRw、nLw、nUw、nDw。</li>
+                            <li>b) 逆時鐘90度：nFw'、nBw'、nRw'、nLw'、nUw'、nDw'。</li>
+                            <li>c) 180度：nFw2、nBw2、nRw2、nLw2、nUw2、nDw2。</li>
+                            <li>(最外n層同時轉動，n=2時可以省略)</li>
+                        </ul>
+                    </li>
+                    <li>12a4) 整顆方塊轉動(Rotations)：
+                        <ul class="textNormal">
+                            <li>a) 順時鐘90度：x（和R或L'同方向），y（和U或D'同方向），z（和F或B'同方向）。</li>
+                            <li>b) 逆時鐘90度：x'（和R'或L同方向），y'（和U'或D同方向），z'（和F'或B同方向）。</li>
+                            <li>c) 180度：x2、y2、z2。</li>
+                        </ul>
+                    </li>
+                    <li>12a5) 外層轉動計數(Outer Block Turn Metric/OBTM) 的定義是：
+                        <ul class="textNormal">
+                            <li>a) 每一個「最外層轉動」和「多層轉動」都算成一步。</li>
+                            <li>b) 每一個「整顆方塊轉動」都算零步。</li>
+                        </ul>
+                    </li>
+                    <li>12a6) 執行轉動記數(Execution Turn Metric/ETM)的定義是：
+                        <ul class="textNormal">
+                            <li>每一個「最外層轉動」，「多層轉動」和「整顆方塊轉動」都算成一步。</li>
+                        </ul>
+                    </li>
+                </ul>
+                <hr/>
+                <ul class="textBold" style="font-size:0.8em;">
+                    <li>Article 12: Notation</li>
+                    <li>12a) Notation for NxNxN Cubes:</li>
+                    <li>12a1) Face Moves (outer slice):
+                        <ul class="textNormal">
+                            <li>a) Clockwise, 90 degrees: F(front face), B(back), R(right), L(left), U(upper), D(bottom).</li>
+                            <li>b) Counter-clockwise, 90 degrees: F', B', R', L', U', D'.</li>
+                            <li>c) 180 degrees: F2, B2, R2, L2, U2, D2.</li>
+                        </ul>
+                    </li>
+                    <li>12a2) Outer Block Moves (outer slice with adjacent inner slices):
+                        <ul class="textNormal">
+                            <li>a) Clockwise, 90 degrees: nFw, nBw, nRw, nLw, nUw, nDw.</li>
+                            <li>b) Counter-clockwise, 90 degrees: nFw', nBw', nRw', nLw', nUw', nDw'.</li>
+                            <li>c) 180 degrees: nFw2, nBw2, nRw2, nLw2, nUw2, nDw2.</li>
+                            <li>(n may also be omitted, for an implicit value of n = 2 slices.)</li>
+                        </ul>
+                    </li>
+                    <li>12a4) Rotations (entire puzzle):
+                        <ul class="textNormal">
+                            <li>a) Clockwise, 90 degrees: x (same direction as R or L'), y (U or D'), z (F or B').</li>
+                            <li>b) Counter-clockwise, 90 degrees: x' (same direction as R' or L), y' (U' or D), z' (F' or B).。</li>
+                            <li>c) 180 degrees: x2, y2, z2.</li>
+                        </ul>
+                    </li>
+                    <li>12a5) Outer Block Turn Metric (OBTM) is defined as:
+                        <ul class="textNormal">
+                            <li>a) Each move of the categories Face Moves and Outer Block Moves is counted as 1 move.</li>
+                            <li>b) Each move of the Rotations category is counted as 0 moves.</li>
+                        </ul>
+                    </li>
+                    <li>12a6) Execution Turn Metric (ETM) is defined as:
+                        <ul class="textNormal">
+                            <li> Each move of the categories Face Moves, 
+                                Outer Block Moves, and Rotations is counted as 1 move.</li>
+                        </ul>
+                    </li>
+                </ul>
+            </td>
+            <td colspan="3" style="vertical-align:top; text-align: center;">
+                <ul class="textBold" style="vertical-align:top;">
+                    <li style="color:blue; font-weight:bolder; text-decoration:underline;">Keyboard 操作</li>
+                    <li> (1) Facemove： 
+                        <ul class="textNormal">
+                            <li>順時針90度  = u,d,r,l,f,b</li>
+                            <li>逆時針90度  = U,D,R,L,F,B (shift-[u,d,r,l,f,b])</li>
+                            <li>轉  180  度 = [u,d,r,l,f,b] +『2』。</li>
+                        </ul>
+                    </li>
+                    <li> (2) Rotations：
+                        <ul class="textNormal">
+                            <li>順時針90度  = x,y,z </li>
+                            <li>逆時針90度  = X,Y,Z (shift-x,y,z) </li>
+                            <li>轉  180  度 =[x,y,z]+『2』 </li>
+                        </ul>
+                    </li>
+                    <li> (3) OuterBlockMove： 
+                        <ul class="textNormal">
+                            <li>順時針90度  = [u,d,r,l,f,b] +『w』</li>
+                            <li>逆時針90度  = [U,D,R,L,F,B] +『w』</li>
+                            <li>轉  180  度 = [u,d,r,l,f,b] +『p』。</li>
+                        </ul>
+                    </li>
+                </ul>
+                <hr/>
+                <!-- --------------------------------------------------------------------------------------------- -->
+                <ul class="textBold" style="vertical-align:top;">
+                    <li style="color:blue; font-weight:bolder; text-decoration:underline;">Mouse/Touch 操作</li>
+                    <li>(1) Facemove：
+                        <ul class="textNormal">
+                            <li>a)順時針90度  = click [U, D, R, L, F, B] buttons or swipe along face side</li>
+                            <li>b)逆時針90度  = click [U',D',R',L',F',B'] buttons or swipe along face side</li>
+                            <li>c)轉  180  度 = click [U2,D2,R2,L2,F2,B2] buttons</li>
+                        </ul>
+                    </li>
+                    <li>(2) Rotations：
+                        <ul class="textNormal">
+                            <li>a)順時針90度  = Click [X, Y, Z] buttons or Swipe along face side</li>
+                            <li>b)逆時針90度  = Click [X',Y',Z'] buttons or Swipe along face side</li>
+                            <li>c)轉  180  度 = Click [X2,Y2,Z2] buttons</li>
+                        </ul>
+                    </li>
+                    <li>(3) OuterBlockMove： 
+                        <ul class="textNormal">
+                            <li>a)順時針90度  = Click+Swipe [U, D, R, L, F, B] buttons</li>
+                            <li>b)逆時針90度  = Click+Swipe [U',D',R',L',F',B'] buttons</li>
+                            <li>c)轉  180  度 = Click+Swipe [U2,D2,R2,L2,F2,B2] buttons</li>
+                        </ul>
+                    </li>
+                </ul>
+                <hr/>
+                <!-- --------------------------------------------------------------------------------------------- -->
+                <br/>
+                <button class="button" onclick="location.href='rubiksGame.html'"style="margin:0;">START</button>
+				<p>　</p>
+                <!-- <form id="howToPlayForm" method='POST' action="https://eugenepai.github.io/t906/rubiksGame.html"> 
+                    <input id="startFormInput" type="submit" name='OperateCube' value="START" class="button"/>
+                </form> -->
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<script>
+    document.body.addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') { document.getElementById("startFormInput").click(); }
+    });
+
+</script>
+</body>
+</html>

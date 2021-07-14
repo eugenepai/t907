@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Rubik's Cube Everywhere</title> 
+    <meta charset=utf-8>
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <style>
+        .red {background-color:red;color:white;border:none;padding:5px;}
+        .blue {background-color:blue;color:white;border:none;padding:5px;}
+        .green {background-color:green;color:white;border:none;padding:5px;}
+        .yellow {background-color:yellow;color:black;border:none;padding:5px;}
+        .orange {background-color:orange;color:white;border:none;padding:5px;}
+        .white {background-color:gray;color:black;border:none;padding:5px;}
+        .button {background-color: #004A7F;
+                -webkit-border-radius: 10px;
+                border-radius: 10px;
+                border: none;
+                color: #FFFFFF;
+                cursor: pointer;
+                display: inline-block;
+                font-family: Arial;
+                font-size: 2em;
+                padding: 0.2em 0.5em;
+                text-align: center;
+                text-decoration: none;
+                -webkit-animation: glowing 1500ms infinite;
+                animation: glowing 1500ms infinite;
+                }
+        @-webkit-keyframes glowing {
+        0%   { background-color: #B20000; -webkit-box-shadow: 0 0 3px #B20000; }
+        50%  { background-color: #FF0000; -webkit-box-shadow: 0 0 40px #FF0000; }
+        100% { background-color: #B20000; -webkit-box-shadow: 0 0 3px #B20000; }}
+
+        @-moz-keyframes glowing {
+        0%   { background-color: #B20000; -moz-box-shadow: 0 0 3px #B20000; }
+        50%  { background-color: #FF0000; -moz-box-shadow: 0 0 40px #FF0000; }
+        100% { background-color: #B20000; -moz-box-shadow: 0 0 3px #B20000; }}
+
+        @-o-keyframes glowing {
+        0%   { background-color: #B20000; box-shadow: 0 0 3px #B20000; }
+        50%  { background-color: #FF0000; box-shadow: 0 0 40px #FF0000; }
+        100% { background-color: #B20000; box-shadow: 0 0 3px #B20000; }}
+
+        @keyframes glowing {
+        0%   { background-color: #B20000; box-shadow: 0 0 3px #B20000; }
+        50%  { background-color: #FF0000; box-shadow: 0 0 40px #FF0000; }
+        100% { background-color: #B20000; box-shadow: 0 0 3px #B20000; }}
+
+        .tbl{border:2px black solid; width:100%; height:100%; table-layout:fixed; font-family: Arial;}
+        .tbltr12{line-height:1.2em;text-align:center;font-weight:bolder;color:black}
+        .tbltr3{font-size:1em; line-height:1.2em;text-align:left;font-weight:bold;color:black;}
+        .imgl{vertical-align:middle; text-align:center; line-height:100%;}
+        .imgp1{display:block;max-height:90%; margin:auto; padding:10% 5% 10% 5%;}
+    </style>
+</head>
+<body>
+<table border="1" class="tbl" id="tableShow">
+    <thead></thead>
+    <tbody>
+        <tr height=5% class="tbltr12">
+            <td rowspan=2 width=64% style="font-size:1.4em;">Rubik's Cube Everywhere! 
+                <span style="color:red;"> --- WCA Rules </span>
+            </td>
+            <td width="10%">程式名稱</td>
+            <td width="18%">作者</td>
+            <td width="8%">日期</td>            
+        </tr>
+    
+        <tr height=5% class="tbltr12" style="font-size:0.8em;font-weight:normal;">
+            <td>t9-06.py</td>            
+            <td>桃園高中 117班 白昕宸</td>
+            <td>2021/7/25</td>            
+        </tr>
+
+        <tr height=2% style="border:2px black solid;line-height:2em;text-align:center;">            
+            <td style="font-size:0.8em; font-family:serif; font-style:italic; 
+                        text-align:center; line-height:1em;">
+                <a href="https://www.worldcubeassociation.org/regulations/translations/chinese-traditional/" 
+                target="_blank" title="WCA競賽規則" style="text-decoration:underline;">[WCA 競賽規則]</a>
+                <span>　　　　</span>
+                <a href="https://www.worldcubeassociation.org/regulations/" 
+                target="_blank" title="WCARegulations" style="text-decoration:underline;">[WCA Regulations]</a>
+            </td>
+            <td colspan=3 Class="tbltr3">　</td>               
+        </tr>
+
+        <tr height=88%>
+            
+            <td style="vertical-align:middle; text-align:center;">                
+                <img id="rbc" class="imgp1" width=50% src=".\image\WCA Logo 2020.svg">
+                <div style="text-align:center;">世界方塊協會 World Cube Association</div>
+            </td>
+            <td colspan="3" style="vertical-align: middle;text-align: center;">
+                <br/>
+                <br/>
+                <button  onclick="location.href='howToPlay.html'">How To Play</button>
+                <!-- <form  class="centerText" method='POST' action="./howToPlay.html">
+                    <input type="submit" name='howToPlay' value="How to Play"/>
+                </form> -->
+                <br/>
+                <br/>
+                
+                <button class="button" onclick="location.href='rubiksGame.html'">START</button>
+                <br/><br/>
+                <img id="TYSH" class="imgp1" width=65% src=".\image\TYSH_logo.gif">
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<script>
+    document.body.addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') { document.getElementById("startFormInput").click(); }
+    });
+
+</script>
+</body>
+</html>
