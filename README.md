@@ -4,7 +4,7 @@
 
 - python版：使用 matplotlib (+numpy)畫出可操作的魔術方塊，僅可單機使用；
 - python/flask/heroku：matplotlib畫出的圖形，配合flask打包成webapp，發布到 heroku上 [[在這裡]](https://t906.herokuapp.com)。
-- html/css/javascript版：webapp改成static html，就可以放在 github pages上了 [[在這裡]](https://eugenepai.giuhub.io/t907/)。
+- html/css/javascript版：webapp改成static html，就可以放在 github pages上了 [[在這裡]](https://eugenepai.github.io/t907/)。
 
 ### WCA 競賽規則 / WCA Regulations
 - [世界方塊協會](https://www.worldcubeassociation.org/regulations/translations/chinese-traditional/)
