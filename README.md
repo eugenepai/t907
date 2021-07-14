@@ -6,6 +6,10 @@
 - python/flask/heroku：matplotlib畫出的圖形，配合flask打包成webapp，發布到 heroku上 [[在這裡]](https://t906.herokuapp.com)。
 - html/css/javascript版：webapp改成static html，就可以放在 github pages上了 [[在這裡]](https://eugenepai.giuhub.io/t907/)。
 
+### WCA 競賽規則 / WCA Regulations
+- [世界方塊協會](https://www.worldcubeassociation.org/regulations/translations/chinese-traditional/)
+- [World Cube Association]()https://www.worldcubeassociation.org/regulations/)
+
 ### How to Play
 Check out [[here]](https://eugenepai.github.io/t907/howToPlay.html)
 
