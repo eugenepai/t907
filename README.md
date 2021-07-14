@@ -7,7 +7,7 @@
 - html/css/javascript版：webapp改成static html，就可以放在 github pages上了 [[在這裡]](https://eugenepai.giuhub.io/t907/)。
 
 ### How to Play
-Check out [here](https://eugenepai.giuhub.io/t907/)
+Check out [[here]](https://eugenepai.giuhub.io/t907/howtoplay.html)
 
 ### Support or Contact
 
