@@ -554,6 +554,7 @@
         turns = localStorage.getItem("LocalStorageturns");
         scramble(turns);
         if (turns > 0) { $("#scrambleTurns").val(turns);  }
+        localStorage.removeItem('LocalStorageturns');
     });
 //===============================  Scramble ================================================
     // push - rotate - pull back, W/O TRANSITION EFFECT when run scrambling
