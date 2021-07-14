@@ -8,7 +8,7 @@
 
 ### WCA 競賽規則 / WCA Regulations
 - [世界方塊協會](https://www.worldcubeassociation.org/regulations/translations/chinese-traditional/)
-- [World Cube Association]()https://www.worldcubeassociation.org/regulations/)
+- [World Cube Association](https://www.worldcubeassociation.org/regulations/)
 
 ### How to Play
 Check out [[here]](https://eugenepai.github.io/t907/howToPlay.html)
