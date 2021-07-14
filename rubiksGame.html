@@ -342,12 +342,10 @@
                         </tr>
                         <tr>
                             <td class="subTitle centerText" >
-                                <button  onclick="location.href='rubiksGame.html'">
-                                    規則模式
-                                </button>
+                                <button onclick=regularStart()>規則模式</button>
                             </td>
                             <td colspan=2 class="subTitle centerText">
-                                <button  onclick=scramble()>轉亂模式</button>
+                                <button  onclick=scrambleStart()>轉亂模式</button>
                                 <!-- <form  class="centerText" method='POST' action="https://eugenepai.github.io/t906/rubiksGame.html"> -->
                                     <!-- <button type=submit>轉亂模式</button> -->
                                     <input style="width:4em; text-align:right;"
@@ -542,10 +540,23 @@
             lockState = "unLocked";
         });
     };
+//===============================  Start Mode  ================================================
+    // Load no of turns to scramble from html input box
+    function regularStart() {
+        localStorage.setItem("LocalStorageturns", 0);
+        location.href='rubiksGame.html';
+    }
+    function scrambleStart() {
+        localStorage.setItem("LocalStorageturns", $("#scrambleTurns").val());
+        location.href='rubiksGame.html';        
+    }
+    window.addEventListener('load', (event) => {  
+        turns = localStorage.getItem("LocalStorageturns");
+        scramble(turns);
+        if (turns > 0) { $("#scrambleTurns").val(turns);  }
+    });
 //===============================  Scramble ================================================
     // push - rotate - pull back, W/O TRANSITION EFFECT when run scrambling
-    // Load no of turns to scramble from html input box
-    // window.addEventListener('load', (event) => {  scramble(); });
     // Rotate Moves
     function push2RotateNoTransition(XYZ,pos,faceDiv,rot) {
         lockState = "Locked";
@@ -569,8 +580,8 @@
         lockState = "unLocked";
     };
     // way of scrambling from chosen random number repeatedly
-    function scramble() {
-        var turns=$("#scrambleTurns").val();
+    function scramble(turns) {        
+        // $("#scrambleTurns").val(turns);
         $('#cubeMode').text("模式　=　轉亂模式");
         OBTM = 0;
         ETM = 0;
@@ -578,7 +589,7 @@
         $('#ETM').text(" ETM = " + ETM + " 次" );
         var keys = ["l","L","r","R","f","F","b","B","u","U","d","D",];
         i=0;
-        do {
+        while (i < turns ) {
             if (lockState === "unLocked") {
                 var randNo = Math.floor(Math.random()*12);
                 if      (keys[randNo] === "l")  { push2RotateNoTransition(12,-100,1,X90);  }
@@ -596,7 +607,6 @@
                 i++;
             };
         }
-        while (i < turns);
     };
 //==============  Keyboard event ===============================================================
     //keyboard event to rotate cubes, and change view angle
