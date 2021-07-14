@@ -1,37 +1,14 @@
-# Rukbik's Cube Everywhere! --- WCA version
+## Rukbik's Cube Everywhere! --- WCA version
 
-You can use the [editor on GitHub](https://github.com/eugenepai/t907/edit/main/README.md) to maintain and preview the content for your website in Markdown files.
+這是高一自主學習完成的作品，有python版、python/flask/html/javascript版、跟html/css/javascript版。
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+- python版：使用 matplotlib (+numpy)畫出可操作的魔術方塊，單機使用；
+- python/flask/heroku：matplotlib畫出的圖形，配合flask打包成webapp，發布到heroku [在這裡](https://t906.herokuapp.com)。
+- html/css/javascript版：webapp改成static html，就放在github pages上了[在這裡](https://eugenepai.giuhub.io/t907/)。
 
-### Markdown
-
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
-
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
-
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/eugenepai/t907/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+### How to Play
+Check out [here](https://eugenepai.giuhub.io/t907/)
 
 ### Support or Contact
 
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+Having trouble with playing cube? [contact support](https://rubiks.seanachan.tw/contact).
