@@ -51,6 +51,549 @@
         .tbltr3{font-size:1em; line-height:1.2em;text-align:left;font-weight:bold;color:black;}
         .imgl{vertical-align:middle; text-align:center; line-height:100%;}
         .imgp1{display:block;max-height:90%; margin:auto; padding:10% 5% 10% 5%;}
+        /*for have fun animation*/
+            * {box-sizing: border-box;transition: all 0.15s ease 0s;}
+            :root {
+                --movement: 0.85;
+                --stop: 0.5;
+                --duration: calc((var(--movement) * (1 / var(--stop))));
+                --stagger: 0.1125;
+                --perspective: 500;
+                --size: 50;
+                --ease: cubic-bezier(1, -0.52, 0.26, 0.89);
+                --bg: #e6e6e6;
+                --color: #f2f2f2;
+                --hue: 320;
+                --saturation: 100;
+                --lightness: 50;
+            }
+            @media (prefers-color-scheme: dark) { :root {--bg: #1a1a1a;} }
+            /* body {
+                align-items: center;
+                background: var(--bg);
+                display: flex;
+                justify-content: center;
+                min-height: 10vh;
+                overflow: hidden;
+            } */
+            .scene {perspective: calc(var(--perspective) * 1px); margin:0 0 2em 0;}
+            .word {
+                display: flex;
+                transform: translate(calc(var(--size)*1.5px),0) rotateX(-30deg) rotateY(10deg) scale3d(0.85, 0.85, 0.85);
+                transform-style: preserve-3d;
+            }
+            .letter__wrap {
+                -webkit-animation: jump calc(var(--duration) * 1s) calc((var(--stagger, 0) * var(--index, 0)) * 1s) var(--ease) infinite;
+                        animation: jump calc(var(--duration) * 1s) calc((var(--stagger, 0) * var(--index, 0)) * 1s) var(--ease) infinite;
+                transform-origin: bottom center;
+                transform-style: preserve-3d;
+            }
+            .letter__wrap .letter {
+                -webkit-animation: rotate calc(var(--duration) * 2s) calc((var(--stagger, 0) * var(--index, 0)) * 1s) ease infinite;
+                        animation: rotate calc(var(--duration) * 2s) calc((var(--stagger, 0) * var(--index, 0)) * 1s) ease infinite;
+            }
+            .word > div:nth-of-type(5),
+            .word__shadow > div:nth-of-type(5) {opacity: 0;}
+            .letter {
+                color: var(--color);
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+                font-size: 2rem;
+                font-weight: bold;
+                height: calc(var(--size) * 1px);
+                margin-right: calc(var(--size) * 0.2px);
+                position: relative;
+                text-transform: uppercase;
+                transform-style: preserve-3d;
+                width: calc(var(--size) * 1px);
+            }
+            .letter__shadow {
+                -webkit-animation: scale calc(var(--duration) * 1s) calc((var(--stagger, 0) * var(--index, 0)) * 1s) var(--ease) infinite, shadow-party calc(var(--duration) * 0.5s) calc((var(--stagger, 0) * var(--index, 0)) * 1s - 7s) linear infinite;
+                        animation: scale calc(var(--duration) * 1s) calc((var(--stagger, 0) * var(--index, 0)) * 1s) var(--ease) infinite, shadow-party calc(var(--duration) * 0.5s) calc((var(--stagger, 0) * var(--index, 0)) * 1s - 7s) linear infinite;
+                background: radial-gradient(#333, transparent) 150% 150%;
+                height: calc(var(--size) * 1px);
+                margin-right: calc(var(--size) * 0.2px);
+                width: calc(var(--size) * 1px);
+                transform-origin: center;
+                filter: blur(8px);
+                transform: rotateX(90deg) translate3d(0, 0, calc(var(--size) * -0.5px));
+            }
+            .letter__panel {
+                --bg: hsl(var(--hue, 65), 100%, 15%);
+                -webkit-animation: party calc(var(--duration) * 0.5s) calc((var(--stagger, 0) * var(--index, 0)) * 1s - 7s) linear infinite;
+                        animation: party calc(var(--duration) * 0.5s) calc((var(--stagger, 0) * var(--index, 0)) * 1s - 7s) linear infinite;
+                align-items: center;
+                background: var(--bg);
+                border: 5px hsl(var(--hue), calc(var(--saturation) * 1%), calc(var(--lightness) * 1%)) solid;
+                display: flex;
+                height: calc(var(--size) * 1px);
+                justify-content: center;
+                left: 50%;
+                position: absolute;
+                top: 50%;
+                width: calc(var(--size) * 1px);
+            }
+            .letter__panel:nth-of-type(1) {
+                transform: translate3d(-50%, -50%, 0) translate3d(0, 0, calc(var(--size) * 0.5px));
+            }
+            .letter__panel:nth-of-type(2) {
+                transform: translate3d(-50%, -50%, 0) rotateX(90deg) translate3d(0, 0, calc(var(--size) * 0.5px));
+            }
+            .letter__panel:nth-of-type(3) {
+                transform: translate3d(-50%, -50%, 0) rotateX(180deg) translate3d(0, 0, calc(var(--size) * 0.5px));
+            }
+            .letter__panel:nth-of-type(4) {
+                transform: translate3d(-50%, -50%, 0) rotateX(-90deg) translate3d(0, 0, calc(var(--size) * 0.5px));
+            }
+            .letter__panel:nth-of-type(5) {
+                transform: translate3d(-50%, -50%, 0) rotateY(-90deg) translate3d(0, 0, calc(var(--size) * 0.5px));
+            }
+            .word__shadow {
+                display: flex;
+                position: absolute;
+                left: 0;
+                bottom: 0;
+                transform-style: preserve-3d;
+            }
+            @-webkit-keyframes rotate {
+                0%, 15% {transform: rotateX(0deg);}
+                20%, 65% {transform: rotateX(270deg);}
+                70%, 100% {transform: rotateX(540deg);}
+            }
+            @keyframes rotate {
+                0%, 15% {transform: rotateX(0deg);}
+                20%, 65% {transform: rotateX(270deg);}
+                70%, 100% {transform: rotateX(540deg);}
+            }
+            @-webkit-keyframes jump {
+                0%, 50%, 100% {transform: scaleX(1) scaleY(1) translate(0, 0);}
+                15% {transform: scaleX(1.2) scaleY(0.8) translate(0, 0);}
+                25% {transform: scaleX(0.9) scaleY(1.1) translate(0, -100%);}
+            }
+            @keyframes jump {
+                0%, 50%, 100% {transform: scaleX(1) scaleY(1) translate(0, 0);}
+                15% {transform: scaleX(1.2) scaleY(0.8) translate(0, 0);}
+                25% {transform: scaleX(0.9) scaleY(1.1) translate(0, -100%);}
+            }
+            @-webkit-keyframes scale {
+                0%, 20%, 50%, 100% {transform: rotateX(90deg) translate3d(0, 0, calc(var(--size) * -0.5px)) scale(1);}
+                25% {transform: rotateX(90deg) translate3d(0, 0, calc(var(--size) * -0.5px)) scale(1.25);}
+            }
+            @keyframes scale {
+                0%, 20%, 50%, 100% {transform: rotateX(90deg) translate3d(0, 0, calc(var(--size) * -0.5px)) scale(1);}
+                25% {transform: rotateX(90deg) translate3d(0, 0, calc(var(--size) * -0.5px)) scale(1.25);}
+            }
+            @-webkit-keyframes party {
+                0% {background: hsl(0, 65%, 40%);border-color: hsl(0, 100%, 50%);}
+                1% {background: hsl(3.6, 65%, 40%);border-color: hsl(3.6, 100%, 50%);}
+                2% {background: hsl(7.2, 65%, 40%);border-color: hsl(7.2, 100%, 50%);}
+                3% {background: hsl(10.8, 65%, 40%);border-color: hsl(10.8, 100%, 50%);}
+                4% {background: hsl(14.4, 65%, 40%);border-color: hsl(14.4, 100%, 50%);}
+                5% {background: hsl(18, 65%, 40%);border-color: hsl(18, 100%, 50%);}
+                6% {background: hsl(21.6, 65%, 40%);border-color: hsl(21.6, 100%, 50%);}
+                7% {background: hsl(25.2, 65%, 40%);border-color: hsl(25.2, 100%, 50%);}
+                8% {background: hsl(28.8, 65%, 40%);border-color: hsl(28.8, 100%, 50%);}
+                9% {background: hsl(32.4, 65%, 40%);border-color: hsl(32.4, 100%, 50%);}
+                10% {background: hsl(36, 65%, 40%);border-color: hsl(36, 100%, 50%);}
+                11% {background: hsl(39.6, 65%, 40%);border-color: hsl(39.6, 100%, 50%);}
+                12% {background: hsl(43.2, 65%, 40%);border-color: hsl(43.2, 100%, 50%);}
+                13% {background: hsl(46.800000000000004, 65%, 40%);border-color: hsl(46.800000000000004, 100%, 50%);}
+                14% {background: hsl(50.4, 65%, 40%);border-color: hsl(50.4, 100%, 50%);}
+                15% {background: hsl(54, 65%, 40%);border-color: hsl(54, 100%, 50%);}
+                16% {background: hsl(57.6, 65%, 40%);border-color: hsl(57.6, 100%, 50%);}
+                17% {background: hsl(61.2, 65%, 40%);border-color: hsl(61.2, 100%, 50%);}
+                18% {background: hsl(64.8, 65%, 40%);border-color: hsl(64.8, 100%, 50%);}
+                19% {background: hsl(68.4, 65%, 40%);border-color: hsl(68.4, 100%, 50%);}
+                20% {background: hsl(72, 65%, 40%);border-color: hsl(72, 100%, 50%);}
+                21% {background: hsl(75.60000000000001, 65%, 40%);border-color: hsl(75.60000000000001, 100%, 50%);}
+                22% {background: hsl(79.2, 65%, 40%);border-color: hsl(79.2, 100%, 50%);}
+                23% {background: hsl(82.8, 65%, 40%);border-color: hsl(82.8, 100%, 50%);}
+                24% {background: hsl(86.4, 65%, 40%);border-color: hsl(86.4, 100%, 50%);}
+                25% {background: hsl(90, 65%, 40%);border-color: hsl(90, 100%, 50%);}
+                26% {background: hsl(93.60000000000001, 65%, 40%);border-color: hsl(93.60000000000001, 100%, 50%);}
+                27% {background: hsl(97.2, 65%, 40%);border-color: hsl(97.2, 100%, 50%);}
+                28% {background: hsl(100.8, 65%, 40%);border-color: hsl(100.8, 100%, 50%);}
+                29% {background: hsl(104.4, 65%, 40%);border-color: hsl(104.4, 100%, 50%);}
+                30% {background: hsl(108, 65%, 40%);border-color: hsl(108, 100%, 50%);}
+                31% {background: hsl(111.60000000000001, 65%, 40%);border-color: hsl(111.60000000000001, 100%, 50%);}
+                32% {background: hsl(115.2, 65%, 40%);border-color: hsl(115.2, 100%, 50%);}
+                33% {background: hsl(118.8, 65%, 40%);border-color: hsl(118.8, 100%, 50%);}
+                34% {background: hsl(122.4, 65%, 40%);border-color: hsl(122.4, 100%, 50%);}
+                35% {background: hsl(126, 65%, 40%);border-color: hsl(126, 100%, 50%);}
+                36% {background: hsl(129.6, 65%, 40%);border-color: hsl(129.6, 100%, 50%);}
+                37% {background: hsl(133.20000000000002, 65%, 40%);border-color: hsl(133.20000000000002, 100%, 50%);}
+                38% {background: hsl(136.8, 65%, 40%);border-color: hsl(136.8, 100%, 50%);}
+                39% {background: hsl(140.4, 65%, 40%);border-color: hsl(140.4, 100%, 50%);}
+                40% {background: hsl(144, 65%, 40%);border-color: hsl(144, 100%, 50%);}
+                41% {background: hsl(147.6, 65%, 40%);border-color: hsl(147.6, 100%, 50%);}
+                42% {background: hsl(151.20000000000002, 65%, 40%);border-color: hsl(151.20000000000002, 100%, 50%);}
+                43% {background: hsl(154.8, 65%, 40%);border-color: hsl(154.8, 100%, 50%);}
+                44% {background: hsl(158.4, 65%, 40%);border-color: hsl(158.4, 100%, 50%);}
+                45% {background: hsl(162, 65%, 40%);border-color: hsl(162, 100%, 50%);}
+                46% {background: hsl(165.6, 65%, 40%);border-color: hsl(165.6, 100%, 50%);}
+                47% {background: hsl(169.20000000000002, 65%, 40%);border-color: hsl(169.20000000000002, 100%, 50%);}
+                48% {background: hsl(172.8, 65%, 40%);border-color: hsl(172.8, 100%, 50%);}
+                49% {background: hsl(176.4, 65%, 40%);border-color: hsl(176.4, 100%, 50%);}
+                50% {background: hsl(180, 65%, 40%);border-color: hsl(180, 100%, 50%);}
+                51% {background: hsl(183.6, 65%, 40%);border-color: hsl(183.6, 100%, 50%);}
+                52% {background: hsl(187.20000000000002, 65%, 40%);border-color: hsl(187.20000000000002, 100%, 50%);}
+                53% {background: hsl(190.8, 65%, 40%);border-color: hsl(190.8, 100%, 50%);}
+                54% {background: hsl(194.4, 65%, 40%);border-color: hsl(194.4, 100%, 50%);}
+                55% {background: hsl(198, 65%, 40%);border-color: hsl(198, 100%, 50%);}
+                56% {background: hsl(201.6, 65%, 40%);border-color: hsl(201.6, 100%, 50%);}
+                57% {background: hsl(205.20000000000002, 65%, 40%);border-color: hsl(205.20000000000002, 100%, 50%);}
+                58% {background: hsl(208.8, 65%, 40%);border-color: hsl(208.8, 100%, 50%);}
+                59% {background: hsl(212.4, 65%, 40%);border-color: hsl(212.4, 100%, 50%);}
+                60% {background: hsl(216, 65%, 40%);border-color: hsl(216, 100%, 50%);}
+                61% {background: hsl(219.6, 65%, 40%);border-color: hsl(219.6, 100%, 50%);}
+                62% {background: hsl(223.20000000000002, 65%, 40%);border-color: hsl(223.20000000000002, 100%, 50%);}
+                63% {background: hsl(226.8, 65%, 40%);border-color: hsl(226.8, 100%, 50%);}
+                64% {background: hsl(230.4, 65%, 40%);border-color: hsl(230.4, 100%, 50%);}
+                65% {background: hsl(234, 65%, 40%);border-color: hsl(234, 100%, 50%);}
+                66% {background: hsl(237.6, 65%, 40%);border-color: hsl(237.6, 100%, 50%);}
+                67% {background: hsl(241.20000000000002, 65%, 40%);border-color: hsl(241.20000000000002, 100%, 50%);}
+                68% {background: hsl(244.8, 65%, 40%);border-color: hsl(244.8, 100%, 50%);}
+                69% {background: hsl(248.4, 65%, 40%);border-color: hsl(248.4, 100%, 50%);}
+                70% {background: hsl(252, 65%, 40%);border-color: hsl(252, 100%, 50%);}
+                71% {background: hsl(255.6, 65%, 40%);border-color: hsl(255.6, 100%, 50%);}
+                72% {background: hsl(259.2, 65%, 40%);border-color: hsl(259.2, 100%, 50%);}
+                73% {background: hsl(262.8, 65%, 40%);border-color: hsl(262.8, 100%, 50%);}
+                74% {background: hsl(266.40000000000003, 65%, 40%);border-color: hsl(266.40000000000003, 100%, 50%);}
+                75% {background: hsl(270, 65%, 40%);border-color: hsl(270, 100%, 50%);}
+                76% {background: hsl(273.6, 65%, 40%);border-color: hsl(273.6, 100%, 50%);}
+                77% {background: hsl(277.2, 65%, 40%);border-color: hsl(277.2, 100%, 50%);}
+                78% {background: hsl(280.8, 65%, 40%);border-color: hsl(280.8, 100%, 50%);}
+                79% {background: hsl(284.40000000000003, 65%, 40%);border-color: hsl(284.40000000000003, 100%, 50%);}
+                80% {background: hsl(288, 65%, 40%);border-color: hsl(288, 100%, 50%);}
+                81% {background: hsl(291.6, 65%, 40%);border-color: hsl(291.6, 100%, 50%);}
+                82% {background: hsl(295.2, 65%, 40%);border-color: hsl(295.2, 100%, 50%);}
+                83% {background: hsl(298.8, 65%, 40%);border-color: hsl(298.8, 100%, 50%);}
+                84% {background: hsl(302.40000000000003, 65%, 40%);border-color: hsl(302.40000000000003, 100%, 50%);}
+                85% {background: hsl(306, 65%, 40%);border-color: hsl(306, 100%, 50%);}
+                86% {background: hsl(309.6, 65%, 40%);border-color: hsl(309.6, 100%, 50%);}
+                87% {background: hsl(313.2, 65%, 40%);border-color: hsl(313.2, 100%, 50%);}
+                88% {background: hsl(316.8, 65%, 40%);border-color: hsl(316.8, 100%, 50%);}
+                89% {background: hsl(320.40000000000003, 65%, 40%);border-color: hsl(320.40000000000003, 100%, 50%);}
+                90% {background: hsl(324, 65%, 40%);border-color: hsl(324, 100%, 50%);}
+                91% {background: hsl(327.6, 65%, 40%);border-color: hsl(327.6, 100%, 50%);}
+                92% {background: hsl(331.2, 65%, 40%);border-color: hsl(331.2, 100%, 50%);}
+                93% {background: hsl(334.8, 65%, 40%);border-color: hsl(334.8, 100%, 50%);}
+                94% {background: hsl(338.40000000000003, 65%, 40%);border-color: hsl(338.40000000000003, 100%, 50%);}
+                95% {background: hsl(342, 65%, 40%);border-color: hsl(342, 100%, 50%);}
+                96% {background: hsl(345.6, 65%, 40%);border-color: hsl(345.6, 100%, 50%);}
+                97% {background: hsl(349.2, 65%, 40%);border-color: hsl(349.2, 100%, 50%);}
+                98% {background: hsl(352.8, 65%, 40%);border-color: hsl(352.8, 100%, 50%);}
+                99% {background: hsl(356.40000000000003, 65%, 40%);border-color: hsl(356.40000000000003, 100%, 50%);}
+                100% {background: hsl(360, 65%, 40%);border-color: hsl(360, 100%, 50%);}
+            }
+            @keyframes party {
+                0% {background: hsl(0, 65%, 40%);border-color: hsl(0, 100%, 50%);}
+                1% {background: hsl(3.6, 65%, 40%);border-color: hsl(3.6, 100%, 50%);}
+                2% {background: hsl(7.2, 65%, 40%);border-color: hsl(7.2, 100%, 50%);}
+                3% {background: hsl(10.8, 65%, 40%);border-color: hsl(10.8, 100%, 50%);}
+                4% {background: hsl(14.4, 65%, 40%);border-color: hsl(14.4, 100%, 50%);}
+                5% {background: hsl(18, 65%, 40%);border-color: hsl(18, 100%, 50%);}
+                6% {background: hsl(21.6, 65%, 40%);border-color: hsl(21.6, 100%, 50%);}
+                7% {background: hsl(25.2, 65%, 40%);border-color: hsl(25.2, 100%, 50%);}
+                8% {background: hsl(28.8, 65%, 40%);border-color: hsl(28.8, 100%, 50%);}
+                9% {background: hsl(32.4, 65%, 40%);border-color: hsl(32.4, 100%, 50%);}
+                10% {background: hsl(36, 65%, 40%);border-color: hsl(36, 100%, 50%);}
+                11% {background: hsl(39.6, 65%, 40%); border-color: hsl(39.6, 100%, 50%); }
+                12% {background: hsl(43.2, 65%, 40%);border-color: hsl(43.2, 100%, 50%);}
+                13% {background: hsl(46.800000000000004, 65%, 40%);border-color: hsl(46.800000000000004, 100%, 50%);}
+                14% {background: hsl(50.4, 65%, 40%);border-color: hsl(50.4, 100%, 50%);}
+                15% {background: hsl(54, 65%, 40%);border-color: hsl(54, 100%, 50%);}
+                16% {background: hsl(57.6, 65%, 40%);border-color: hsl(57.6, 100%, 50%);}
+                17% {background: hsl(61.2, 65%, 40%);border-color: hsl(61.2, 100%, 50%);}
+                18% {background: hsl(64.8, 65%, 40%);border-color: hsl(64.8, 100%, 50%);}
+                19% {background: hsl(68.4, 65%, 40%);border-color: hsl(68.4, 100%, 50%);}
+                20% {background: hsl(72, 65%, 40%);border-color: hsl(72, 100%, 50%);}
+                21% {background: hsl(75.60000000000001, 65%, 40%); border-color: hsl(75.60000000000001, 100%, 50%); }
+                22% {background: hsl(79.2, 65%, 40%); border-color: hsl(79.2, 100%, 50%); }
+                23% {background: hsl(82.8, 65%, 40%); border-color: hsl(82.8, 100%, 50%); }
+                24% {background: hsl(86.4, 65%, 40%); border-color: hsl(86.4, 100%, 50%); }
+                25% {background: hsl(90, 65%, 40%); border-color: hsl(90, 100%, 50%); }
+                26% {background: hsl(93.60000000000001, 65%, 40%); border-color: hsl(93.60000000000001, 100%, 50%); }
+                27% {background: hsl(97.2, 65%, 40%); border-color: hsl(97.2, 100%, 50%); }
+                28% {background: hsl(100.8, 65%, 40%); border-color: hsl(100.8, 100%, 50%); }
+                29% {background: hsl(104.4, 65%, 40%); border-color: hsl(104.4, 100%, 50%); }
+                30% {background: hsl(108, 65%, 40%); border-color: hsl(108, 100%, 50%); }
+                31% {background: hsl(111.60000000000001, 65%, 40%); border-color: hsl(111.60000000000001, 100%, 50%); }
+                32% {background: hsl(115.2, 65%, 40%); border-color: hsl(115.2, 100%, 50%); }
+                33% {background: hsl(118.8, 65%, 40%); border-color: hsl(118.8, 100%, 50%); }
+                34% {background: hsl(122.4, 65%, 40%); border-color: hsl(122.4, 100%, 50%); }
+                35% {background: hsl(126, 65%, 40%); border-color: hsl(126, 100%, 50%); }
+                36% {background: hsl(129.6, 65%, 40%); border-color: hsl(129.6, 100%, 50%); }
+                37% {background: hsl(133.20000000000002, 65%, 40%); border-color: hsl(133.20000000000002, 100%, 50%); }
+                38% {background: hsl(136.8, 65%, 40%); border-color: hsl(136.8, 100%, 50%); }
+                39% {background: hsl(140.4, 65%, 40%); border-color: hsl(140.4, 100%, 50%); }
+                40% {background: hsl(144, 65%, 40%); border-color: hsl(144, 100%, 50%); }
+                41% {background: hsl(147.6, 65%, 40%); border-color: hsl(147.6, 100%, 50%); }
+                42% {background: hsl(151.20000000000002, 65%, 40%); border-color: hsl(151.20000000000002, 100%, 50%); }
+                43% {background: hsl(154.8, 65%, 40%); border-color: hsl(154.8, 100%, 50%); }
+                44% {background: hsl(158.4, 65%, 40%); border-color: hsl(158.4, 100%, 50%); }
+                45% {background: hsl(162, 65%, 40%); border-color: hsl(162, 100%, 50%); }
+                46% {background: hsl(165.6, 65%, 40%); border-color: hsl(165.6, 100%, 50%); }
+                47% {background: hsl(169.20000000000002, 65%, 40%); border-color: hsl(169.20000000000002, 100%, 50%); }
+                48% {background: hsl(172.8, 65%, 40%); border-color: hsl(172.8, 100%, 50%); }
+                49% {background: hsl(176.4, 65%, 40%); border-color: hsl(176.4, 100%, 50%); }
+                50% {background: hsl(180, 65%, 40%); border-color: hsl(180, 100%, 50%); }
+                51% {background: hsl(183.6, 65%, 40%); border-color: hsl(183.6, 100%, 50%); }
+                52% {background: hsl(187.20000000000002, 65%, 40%); border-color: hsl(187.20000000000002, 100%, 50%); }
+                53% {background: hsl(190.8, 65%, 40%); border-color: hsl(190.8, 100%, 50%); }
+                54% {background: hsl(194.4, 65%, 40%); border-color: hsl(194.4, 100%, 50%); }
+                55% {background: hsl(198, 65%, 40%); border-color: hsl(198, 100%, 50%); }
+                56% {background: hsl(201.6, 65%, 40%); border-color: hsl(201.6, 100%, 50%); }
+                57% {background: hsl(205.20000000000002, 65%, 40%); border-color: hsl(205.20000000000002, 100%, 50%); }
+                58% {background: hsl(208.8, 65%, 40%); border-color: hsl(208.8, 100%, 50%); }
+                59% {background: hsl(212.4, 65%, 40%); border-color: hsl(212.4, 100%, 50%); }
+                60% {background: hsl(216, 65%, 40%); border-color: hsl(216, 100%, 50%); }
+                61% {background: hsl(219.6, 65%, 40%); border-color: hsl(219.6, 100%, 50%); }
+                62% {background: hsl(223.20000000000002, 65%, 40%); border-color: hsl(223.20000000000002, 100%, 50%); }
+                63% {background: hsl(226.8, 65%, 40%); border-color: hsl(226.8, 100%, 50%); }
+                64% {background: hsl(230.4, 65%, 40%); border-color: hsl(230.4, 100%, 50%); }
+                65% {background: hsl(234, 65%, 40%); border-color: hsl(234, 100%, 50%); }
+                66% {background: hsl(237.6, 65%, 40%); border-color: hsl(237.6, 100%, 50%); }
+                67% {background: hsl(241.20000000000002, 65%, 40%); border-color: hsl(241.20000000000002, 100%, 50%); }
+                68% {background: hsl(244.8, 65%, 40%); border-color: hsl(244.8, 100%, 50%); }
+                69% {background: hsl(248.4, 65%, 40%); border-color: hsl(248.4, 100%, 50%); }
+                70% {background: hsl(252, 65%, 40%); border-color: hsl(252, 100%, 50%); }
+                71% {background: hsl(255.6, 65%, 40%); border-color: hsl(255.6, 100%, 50%); }
+                72% {background: hsl(259.2, 65%, 40%); border-color: hsl(259.2, 100%, 50%); }
+                73% {background: hsl(262.8, 65%, 40%); border-color: hsl(262.8, 100%, 50%); }
+                74% {background: hsl(266.40000000000003, 65%, 40%); border-color: hsl(266.40000000000003, 100%, 50%); }
+                75% {background: hsl(270, 65%, 40%); border-color: hsl(270, 100%, 50%); }
+                76% {background: hsl(273.6, 65%, 40%); border-color: hsl(273.6, 100%, 50%); }
+                77% {background: hsl(277.2, 65%, 40%); border-color: hsl(277.2, 100%, 50%); }
+                78% {background: hsl(280.8, 65%, 40%); border-color: hsl(280.8, 100%, 50%); }
+                79% {background: hsl(284.40000000000003, 65%, 40%); border-color: hsl(284.40000000000003, 100%, 50%); }
+                80% {background: hsl(288, 65%, 40%); border-color: hsl(288, 100%, 50%); }
+                81% {background: hsl(291.6, 65%, 40%); border-color: hsl(291.6, 100%, 50%); }
+                82% {background: hsl(295.2, 65%, 40%); border-color: hsl(295.2, 100%, 50%); }
+                83% {background: hsl(298.8, 65%, 40%); border-color: hsl(298.8, 100%, 50%); }
+                84% {background: hsl(302.40000000000003, 65%, 40%); border-color: hsl(302.40000000000003, 100%, 50%); }
+                85% {background: hsl(306, 65%, 40%); border-color: hsl(306, 100%, 50%); }
+                86% {background: hsl(309.6, 65%, 40%); border-color: hsl(309.6, 100%, 50%); }
+                87% {background: hsl(313.2, 65%, 40%); border-color: hsl(313.2, 100%, 50%); }
+                88% {background: hsl(316.8, 65%, 40%); border-color: hsl(316.8, 100%, 50%); }
+                89% {background: hsl(320.40000000000003, 65%, 40%); border-color: hsl(320.40000000000003, 100%, 50%); }
+                90% {background: hsl(324, 65%, 40%); border-color: hsl(324, 100%, 50%); }
+                91% {background: hsl(327.6, 65%, 40%); border-color: hsl(327.6, 100%, 50%); }
+                92% {background: hsl(331.2, 65%, 40%); border-color: hsl(331.2, 100%, 50%); }
+                93% {background: hsl(334.8, 65%, 40%); border-color: hsl(334.8, 100%, 50%); }
+                94% {background: hsl(338.40000000000003, 65%, 40%); border-color: hsl(338.40000000000003, 100%, 50%); }
+                95% {background: hsl(342, 65%, 40%); border-color: hsl(342, 100%, 50%); }
+                96% {background: hsl(345.6, 65%, 40%); border-color: hsl(345.6, 100%, 50%); }
+                97% {background: hsl(349.2, 65%, 40%); border-color: hsl(349.2, 100%, 50%); }
+                98% {background: hsl(352.8, 65%, 40%); border-color: hsl(352.8, 100%, 50%); }
+                99% {background: hsl(356.40000000000003, 65%, 40%); border-color: hsl(356.40000000000003, 100%, 50%); }
+                100% {background: hsl(360, 65%, 40%); border-color: hsl(360, 100%, 50%); }
+            }
+            @-webkit-keyframes shadow-party {
+                0% {background: radial-gradient(#f00, transparent) 150% 150%; }
+                1% {background: radial-gradient(#ff0f00, transparent) 150% 150%; }
+                2% {background: radial-gradient(#ff1f00, transparent) 150% 150%; }
+                3% {background: radial-gradient(#ff2e00, transparent) 150% 150%; }
+                4% {background: radial-gradient(#ff3d00, transparent) 150% 150%; }
+                5% {background: radial-gradient(#ff4d00, transparent) 150% 150%; }
+                6% {background: radial-gradient(#ff5c00, transparent) 150% 150%; }
+                7% {background: radial-gradient(#ff6b00, transparent) 150% 150%; }
+                8% {background: radial-gradient(#ff7a00, transparent) 150% 150%; }
+                9% {background: radial-gradient(#ff8a00, transparent) 150% 150%; }
+                10% {background: radial-gradient(#f90, transparent) 150% 150%; }
+                11% {background: radial-gradient(#ffa800, transparent) 150% 150%; }
+                12% {background: radial-gradient(#ffb800, transparent) 150% 150%; }
+                13% {background: radial-gradient(#ffc700, transparent) 150% 150%; }
+                14% {background: radial-gradient(#ffd600, transparent) 150% 150%; }
+                15% {background: radial-gradient(#ffe500, transparent) 150% 150%; }
+                16% {background: radial-gradient(#fff500, transparent) 150% 150%; }
+                17% {background: radial-gradient(#faff00, transparent) 150% 150%; }
+                18% {background: radial-gradient(#ebff00, transparent) 150% 150%; }
+                19% {background: radial-gradient(#dbff00, transparent) 150% 150%; }
+                20% {background: radial-gradient(#cf0, transparent) 150% 150%; }
+                21% {background: radial-gradient(#bdff00, transparent) 150% 150%; }
+                22% {background: radial-gradient(#adff00, transparent) 150% 150%; }
+                23% {background: radial-gradient(#9eff00, transparent) 150% 150%; }
+                24% {background: radial-gradient(#8fff00, transparent) 150% 150%; }
+                25% {background: radial-gradient(#80ff00, transparent) 150% 150%; }
+                26% {background: radial-gradient(#70ff00, transparent) 150% 150%; }
+                27% {background: radial-gradient(#61ff00, transparent) 150% 150%; }
+                28% {background: radial-gradient(#52ff00, transparent) 150% 150%; }
+                29% {background: radial-gradient(#42ff00, transparent) 150% 150%; }
+                30% {background: radial-gradient(#3f0, transparent) 150% 150%; }
+                31% {background: radial-gradient(#24ff00, transparent) 150% 150%; }
+                32% {background: radial-gradient(#14ff00, transparent) 150% 150%; }
+                33% {background: radial-gradient(#05ff00, transparent) 150% 150%; }
+                34% {background: radial-gradient(#00ff0a, transparent) 150% 150%; }
+                35% {background: radial-gradient(#00ff19, transparent) 150% 150%; }
+                36% {background: radial-gradient(#00ff29, transparent) 150% 150%; }
+                37% {background: radial-gradient(#00ff38, transparent) 150% 150%; }
+                38% {background: radial-gradient(#00ff47, transparent) 150% 150%; }
+                39% {background: radial-gradient(#00ff57, transparent) 150% 150%; }
+                40% {background: radial-gradient(#0f6, transparent) 150% 150%; }
+                41% {background: radial-gradient(#00ff75, transparent) 150% 150%; }
+                42% {background: radial-gradient(#00ff85, transparent) 150% 150%; }
+                43% {background: radial-gradient(#00ff94, transparent) 150% 150%; }
+                44% {background: radial-gradient(#00ffa3, transparent) 150% 150%; }
+                45% {background: radial-gradient(#00ffb3, transparent) 150% 150%; }
+                46% {background: radial-gradient(#00ffc2, transparent) 150% 150%; }
+                47% {background: radial-gradient(#00ffd1, transparent) 150% 150%; }
+                48% {background: radial-gradient(#00ffe0, transparent) 150% 150%; }
+                49% {background: radial-gradient(#00fff0, transparent) 150% 150%; }
+                50% {background: radial-gradient(#0ff, transparent) 150% 150%; }
+                51% {background: radial-gradient(#00f0ff, transparent) 150% 150%; }
+                52% {background: radial-gradient(#00e0ff, transparent) 150% 150%; }
+                53% {background: radial-gradient(#00d1ff, transparent) 150% 150%; }
+                54% {background: radial-gradient(#00c2ff, transparent) 150% 150%; }
+                55% {background: radial-gradient(#00b2ff, transparent) 150% 150%; }
+                56% {background: radial-gradient(#00a3ff, transparent) 150% 150%; }
+                57% {background: radial-gradient(#0094ff, transparent) 150% 150%; }
+                58% {background: radial-gradient(#0085ff, transparent) 150% 150%; }
+                59% {background: radial-gradient(#0075ff, transparent) 150% 150%; }
+                60% {background: radial-gradient(#06f, transparent) 150% 150%; }
+                61% {background: radial-gradient(#0057ff, transparent) 150% 150%; }
+                62% {background: radial-gradient(#0047ff, transparent) 150% 150%; }
+                63% {background: radial-gradient(#0038ff, transparent) 150% 150%; }
+                64% {background: radial-gradient(#0029ff, transparent) 150% 150%; }
+                65% {background: radial-gradient(#0019ff, transparent) 150% 150%; }
+                66% {background: radial-gradient(#000aff, transparent) 150% 150%; }
+                67% {background: radial-gradient(#0500ff, transparent) 150% 150%; }
+                68% {background: radial-gradient(#1400ff, transparent) 150% 150%; }
+                69% {background: radial-gradient(#2400ff, transparent) 150% 150%; }
+                70% {background: radial-gradient(#30f, transparent) 150% 150%; }
+                71% {background: radial-gradient(#4200ff, transparent) 150% 150%; }
+                72% {background: radial-gradient(#5200ff, transparent) 150% 150%; }
+                73% {background: radial-gradient(#6100ff, transparent) 150% 150%; }
+                74% {background: radial-gradient(#7000ff, transparent) 150% 150%; }
+                75% {background: radial-gradient(#7f00ff, transparent) 150% 150%; }
+                76% {background: radial-gradient(#8f00ff, transparent) 150% 150%; }
+                77% {background: radial-gradient(#9e00ff, transparent) 150% 150%; }
+                78% {background: radial-gradient(#ad00ff, transparent) 150% 150%; }
+                79% {background: radial-gradient(#bd00ff, transparent) 150% 150%; }
+                80% {background: radial-gradient(#c0f, transparent) 150% 150%; }
+                81% {background: radial-gradient(#db00ff, transparent) 150% 150%; }
+                82% {background: radial-gradient(#eb00ff, transparent) 150% 150%; }
+                83% {background: radial-gradient(#fa00ff, transparent) 150% 150%; }
+                84% {background: radial-gradient(#ff00f5, transparent) 150% 150%; }
+                85% {background: radial-gradient(#ff00e6, transparent) 150% 150%; }
+                86% {background: radial-gradient(#ff00d6, transparent) 150% 150%; }
+                87% {background: radial-gradient(#ff00c7, transparent) 150% 150%; }
+                88% {background: radial-gradient(#ff00b8, transparent) 150% 150%; }
+                89% {background: radial-gradient(#ff00a8, transparent) 150% 150%; }
+                90% {background: radial-gradient(#f09, transparent) 150% 150%; }
+                91% {background: radial-gradient(#ff008a, transparent) 150% 150%; }
+                92% {background: radial-gradient(#ff007a, transparent) 150% 150%; }
+                93% {background: radial-gradient(#ff006b, transparent) 150% 150%; }
+                94% {background: radial-gradient(#ff005c, transparent) 150% 150%; }
+                95% {background: radial-gradient(#ff004c, transparent) 150% 150%; }
+                96% {background: radial-gradient(#ff003d, transparent) 150% 150%; }
+                97% {background: radial-gradient(#ff002e, transparent) 150% 150%; }
+                98% {background: radial-gradient(#ff001f, transparent) 150% 150%; }
+                99% {background: radial-gradient(#ff000f, transparent) 150% 150%; }
+                100% {background: radial-gradient(#f00, transparent) 150% 150%; }
+            }
+            @keyframes shadow-party {
+                0% {background: radial-gradient(#f00, transparent) 150% 150%; }
+                1% {background: radial-gradient(#ff0f00, transparent) 150% 150%; }
+                2% {background: radial-gradient(#ff1f00, transparent) 150% 150%; }
+                3% {background: radial-gradient(#ff2e00, transparent) 150% 150%; }
+                4% {background: radial-gradient(#ff3d00, transparent) 150% 150%; }
+                5% {background: radial-gradient(#ff4d00, transparent) 150% 150%; }
+                6% {background: radial-gradient(#ff5c00, transparent) 150% 150%; }
+                7% {background: radial-gradient(#ff6b00, transparent) 150% 150%; }
+                8% {background: radial-gradient(#ff7a00, transparent) 150% 150%; }
+                9% {background: radial-gradient(#ff8a00, transparent) 150% 150%; }
+                10% {background: radial-gradient(#f90, transparent) 150% 150%; }
+                11% {background: radial-gradient(#ffa800, transparent) 150% 150%; }
+                12% {background: radial-gradient(#ffb800, transparent) 150% 150%; }
+                13% {background: radial-gradient(#ffc700, transparent) 150% 150%; }
+                14% {background: radial-gradient(#ffd600, transparent) 150% 150%; }
+                15% {background: radial-gradient(#ffe500, transparent) 150% 150%; }
+                16% {background: radial-gradient(#fff500, transparent) 150% 150%; }
+                17% {background: radial-gradient(#faff00, transparent) 150% 150%; }
+                18% {background: radial-gradient(#ebff00, transparent) 150% 150%; }
+                19% {background: radial-gradient(#dbff00, transparent) 150% 150%; }
+                20% {background: radial-gradient(#cf0, transparent) 150% 150%; }
+                21% {background: radial-gradient(#bdff00, transparent) 150% 150%; }
+                22% {background: radial-gradient(#adff00, transparent) 150% 150%; }
+                23% {background: radial-gradient(#9eff00, transparent) 150% 150%; }
+                24% {background: radial-gradient(#8fff00, transparent) 150% 150%; }
+                25% {background: radial-gradient(#80ff00, transparent) 150% 150%; }
+                26% {background: radial-gradient(#70ff00, transparent) 150% 150%; }
+                27% {background: radial-gradient(#61ff00, transparent) 150% 150%; }
+                28% {background: radial-gradient(#52ff00, transparent) 150% 150%; }
+                29% {background: radial-gradient(#42ff00, transparent) 150% 150%; }
+                30% {background: radial-gradient(#3f0, transparent) 150% 150%; }
+                31% {background: radial-gradient(#24ff00, transparent) 150% 150%; }
+                32% {background: radial-gradient(#14ff00, transparent) 150% 150%; }
+                33% {background: radial-gradient(#05ff00, transparent) 150% 150%; }
+                34% {background: radial-gradient(#00ff0a, transparent) 150% 150%; }
+                35% {background: radial-gradient(#00ff19, transparent) 150% 150%; }
+                36% {background: radial-gradient(#00ff29, transparent) 150% 150%; }
+                37% {background: radial-gradient(#00ff38, transparent) 150% 150%; }
+                38% {background: radial-gradient(#00ff47, transparent) 150% 150%; }
+                39% {background: radial-gradient(#00ff57, transparent) 150% 150%; }
+                40% {background: radial-gradient(#0f6, transparent) 150% 150%; }
+                41% {background: radial-gradient(#00ff75, transparent) 150% 150%; }
+                42% {background: radial-gradient(#00ff85, transparent) 150% 150%; }
+                43% {background: radial-gradient(#00ff94, transparent) 150% 150%; }
+                44% {background: radial-gradient(#00ffa3, transparent) 150% 150%; }
+                45% {background: radial-gradient(#00ffb3, transparent) 150% 150%; }
+                46% {background: radial-gradient(#00ffc2, transparent) 150% 150%; }
+                47% {background: radial-gradient(#00ffd1, transparent) 150% 150%; }
+                48% {background: radial-gradient(#00ffe0, transparent) 150% 150%; }
+                49% {background: radial-gradient(#00fff0, transparent) 150% 150%; }
+                50% {background: radial-gradient(#0ff, transparent) 150% 150%; }
+                51% {background: radial-gradient(#00f0ff, transparent) 150% 150%; }
+                52% {background: radial-gradient(#00e0ff, transparent) 150% 150%; }
+                53% {background: radial-gradient(#00d1ff, transparent) 150% 150%; }
+                54% {background: radial-gradient(#00c2ff, transparent) 150% 150%; }
+                55% {background: radial-gradient(#00b2ff, transparent) 150% 150%; }
+                56% {background: radial-gradient(#00a3ff, transparent) 150% 150%; }
+                57% {background: radial-gradient(#0094ff, transparent) 150% 150%; }
+                58% {background: radial-gradient(#0085ff, transparent) 150% 150%; }
+                59% {background: radial-gradient(#0075ff, transparent) 150% 150%; }
+                60% {background: radial-gradient(#06f, transparent) 150% 150%; }
+                61% {background: radial-gradient(#0057ff, transparent) 150% 150%; }
+                62% {background: radial-gradient(#0047ff, transparent) 150% 150%; }
+                63% {background: radial-gradient(#0038ff, transparent) 150% 150%; }
+                64% {background: radial-gradient(#0029ff, transparent) 150% 150%; }
+                65% {background: radial-gradient(#0019ff, transparent) 150% 150%; }
+                66% {background: radial-gradient(#000aff, transparent) 150% 150%; }
+                67% {background: radial-gradient(#0500ff, transparent) 150% 150%; }
+                68% {background: radial-gradient(#1400ff, transparent) 150% 150%; }
+                69% {background: radial-gradient(#2400ff, transparent) 150% 150%; }
+                70% {background: radial-gradient(#30f, transparent) 150% 150%; }
+                71% {background: radial-gradient(#4200ff, transparent) 150% 150%; }
+                72% {background: radial-gradient(#5200ff, transparent) 150% 150%; }
+                73% {background: radial-gradient(#6100ff, transparent) 150% 150%; }
+                74% {background: radial-gradient(#7000ff, transparent) 150% 150%; }
+                75% {background: radial-gradient(#7f00ff, transparent) 150% 150%; }
+                76% {background: radial-gradient(#8f00ff, transparent) 150% 150%; }
+                77% {background: radial-gradient(#9e00ff, transparent) 150% 150%; }
+                78% {background: radial-gradient(#ad00ff, transparent) 150% 150%; }
+                79% {background: radial-gradient(#bd00ff, transparent) 150% 150%; }
+                80% {background: radial-gradient(#c0f, transparent) 150% 150%; }
+                81% {background: radial-gradient(#db00ff, transparent) 150% 150%; }
+                82% {background: radial-gradient(#eb00ff, transparent) 150% 150%; }
+                83% {background: radial-gradient(#fa00ff, transparent) 150% 150%; }
+                84% {background: radial-gradient(#ff00f5, transparent) 150% 150%; }
+                85% {background: radial-gradient(#ff00e6, transparent) 150% 150%; }
+                86% {background: radial-gradient(#ff00d6, transparent) 150% 150%; }
+                87% {background: radial-gradient(#ff00c7, transparent) 150% 150%; }
+                88% {background: radial-gradient(#ff00b8, transparent) 150% 150%; }
+                89% {background: radial-gradient(#ff00a8, transparent) 150% 150%; }
+                90% {background: radial-gradient(#f09, transparent) 150% 150%; }
+                91% {background: radial-gradient(#ff008a, transparent) 150% 150%; }
+                92% {background: radial-gradient(#ff007a, transparent) 150% 150%; }
+                93% {background: radial-gradient(#ff006b, transparent) 150% 150%; }
+                94% {background: radial-gradient(#ff005c, transparent) 150% 150%; }
+                95% {background: radial-gradient(#ff004c, transparent) 150% 150%; }
+                96% {background: radial-gradient(#ff003d, transparent) 150% 150%; }
+                97% {background: radial-gradient(#ff002e, transparent) 150% 150%; }
+                98% {background: radial-gradient(#ff001f, transparent) 150% 150%; }
+                99% {background: radial-gradient(#ff000f, transparent) 150% 150%; }
+                100% {background: radial-gradient(#f00, transparent) 150% 150%; }
+            }
     </style>
 </head>
 <body>
@@ -86,17 +629,66 @@
 
         <tr height=88%>
             
-            <td style="vertical-align:middle; text-align:center;">                
-                <img id="rbc" class="imgp1" width=50% src=".\image\WCA Logo 2020.svg">
-                <div style="text-align:center;">世界方塊協會 World Cube Association</div>
+            <td style="vertical-align:middle; text-align:center;">
+                
+                <img id="rbc" class="imgp1" width=45% src=".\image\WCA Logo 2020.svg">
+                <div class="scene">
+                    <div class="word">
+                        <div class="letter__wrap" style="--index: 0;">
+                            <div class="letter" data-letter="H">
+                                <span class="letter__panel" aria-hidden="true">H</span>
+                                <span class="letter__panel" aria-hidden="true">H</span>
+                                <span class="letter__panel" aria-hidden="true">H</span>
+                                <span class="letter__panel" aria-hidden="true">H</span>
+                                <span class="letter__panel"></span>
+                            </div>
+                        </div>
+                        <div class="letter__wrap" style="--index: 1;">
+                            <div class="letter" data-letter="a"><span class="letter__panel" aria-hidden="true">a</span><span class="letter__panel" aria-hidden="true">a</span><span class="letter__panel" aria-hidden="true">a</span><span class="letter__panel" aria-hidden="true">a</span><span class="letter__panel"></span></div>
+                        </div>
+                        <div class="letter__wrap" style="--index: 2;">
+                            <div class="letter" data-letter="v"><span class="letter__panel" aria-hidden="true">v</span><span class="letter__panel" aria-hidden="true">v</span><span class="letter__panel" aria-hidden="true">v</span><span class="letter__panel" aria-hidden="true">v</span><span class="letter__panel"></span></div>
+                        </div>
+                        <div class="letter__wrap" style="--index: 3;">
+                            <div class="letter" data-letter="e"><span class="letter__panel" aria-hidden="true">e</span><span class="letter__panel" aria-hidden="true">e</span><span class="letter__panel" aria-hidden="true">e</span><span class="letter__panel" aria-hidden="true">e</span><span class="letter__panel"></span></div>
+                        </div>
+                        <div class="letter__wrap" style="--index: 4;">
+                            <div class="letter" data-letter=" "><span class="letter__panel" aria-hidden="true"> </span><span class="letter__panel" aria-hidden="true"> </span><span class="letter__panel" aria-hidden="true"> </span><span class="letter__panel" aria-hidden="true"> </span><span class="letter__panel"></span></div>
+                        </div>
+                        <div class="letter__wrap" style="--index: 5;">
+                            <div class="letter" data-letter="f"><span class="letter__panel" aria-hidden="true">f</span><span class="letter__panel" aria-hidden="true">f</span><span class="letter__panel" aria-hidden="true">f</span><span class="letter__panel" aria-hidden="true">f</span><span class="letter__panel"></span></div>
+                        </div>
+                        <div class="letter__wrap" style="--index: 6;">
+                            <div class="letter" data-letter="u"><span class="letter__panel" aria-hidden="true">u</span><span class="letter__panel" aria-hidden="true">u</span><span class="letter__panel" aria-hidden="true">u</span><span class="letter__panel" aria-hidden="true">u</span><span class="letter__panel"></span></div>
+                        </div>
+                        <div class="letter__wrap" style="--index: 7;">
+                            <div class="letter" data-letter="n"><span class="letter__panel" aria-hidden="true">n</span><span class="letter__panel" aria-hidden="true">n</span><span class="letter__panel" aria-hidden="true">n</span><span class="letter__panel" aria-hidden="true">n</span><span class="letter__panel"></span></div>
+                        </div>
+                        <div class="letter__wrap" style="--index: 8;">
+                            <div class="letter" data-letter="!"><span class="letter__panel" aria-hidden="true">!</span><span class="letter__panel" aria-hidden="true">!</span><span class="letter__panel" aria-hidden="true">!</span><span class="letter__panel" aria-hidden="true">!</span><span class="letter__panel"></span></div>
+                        </div>
+                        <div class="word__shadow">
+                            <div class="letter__shadow" style="--index: 0;"></div>
+                            <div class="letter__shadow" style="--index: 1;"></div>
+                            <div class="letter__shadow" style="--index: 2;"></div>
+                            <div class="letter__shadow" style="--index: 3;"></div>
+                            <div class="letter__shadow" style="--index: 4;"></div>
+                            <div class="letter__shadow" style="--index: 5;"></div>
+                            <div class="letter__shadow" style="--index: 6;"></div>
+                            <div class="letter__shadow" style="--index: 7;"></div>
+                            <div class="letter__shadow" style="--index: 8;"></div>
+                        </div>
+                    </div>
+                </div>
+                <div style="text-align:center;transform:rotateX(-30deg) rotateY(10deg) translateY(-1em);perspective:0;font-weight:bolder ">
+                    世界方塊協會 World Cube Association
+                </div>
+                <br/>
             </td>
             <td colspan="3" style="vertical-align: middle;text-align: center;">
                 <br/>
                 <br/>
                 <button  onclick="location.href='howToPlay.html'">How To Play</button>
-                <!-- <form  class="centerText" method='POST' action="./howToPlay.html">
-                    <input type="submit" name='howToPlay' value="How to Play"/>
-                </form> -->
                 <br/>
                 <br/>
                 
