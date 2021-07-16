@@ -74,6 +74,20 @@
         Y180=[-1,0,0,0,  0,1,0,0,    0,0,-1,0,  0,0,0,1];
         Z180=[-1,0,0,0,  0,-1,0,0,   0,0,1,0,   0,0,0,1];
         */
+
+        .fsUp:after   {transform: matrix3d(1,0,0,0,   0,1,0,0,   0,0,1,0,   0,0,-0.035,1);border: solid black 5px; border-radius:2px; 
+                        content:''; background-color: black; width:100%; height:100%; box-sizing: border-box; position:absolute;}
+        .fsDown:after {transform: matrix3d(1,0,0,0,   0,1,0,0,   0,0,1,0,   0,0,-0.035,1);border: solid black 5px; border-radius:20px; 
+                        content:''; background-color: black; width:100%; height:100%; box-sizing: border-box; position:absolute;} 
+        .fsFront:after{transform: matrix3d(1,0,0,0,   0,1,0,0,   0,0,1,0,   0,0,-0.035,1);border: solid black 5px; border-radius:20px; 
+                        content:''; background-color: black; width:100%; height:100%; box-sizing: border-box; position:absolute;} 
+        .fsBack:after {transform: matrix3d(1,0,0,0,   0,1,0,0,   0,0,1,0,   0,0,-0.035,1);border: solid black 5px; border-radius:20px; 
+                        content:''; background-color: black; width:100%; height:100%; box-sizing: border-box; position:absolute;}
+        .fsLeft:after {transform: matrix3d(1,0,0,0,   0,1,0,0,   0,0,1,0,   0,0,-0.035,1);border: solid black 5px; border-radius:20px; 
+                        content:''; background-color: black; width:100%; height:100%; box-sizing: border-box; position:absolute;}
+        .fsRight:after{transform: matrix3d(1,0,0,0,   0,1,0,0,   0,0,1,0,   0,0,-0.035,1);border: solid black 5px; border-radius:20px; 
+                        content:''; background-color: black; width:100%; height:100%; box-sizing: border-box; position:absolute;}
+
         .fsUp   {-webkit-transform: matrix3d(1,0,0,0,   0,1,0,0,   0,0,1,0,   0,0,+50,1);
                          transform: matrix3d(1,0,0,0,   0,1,0,0,   0,0,1,0,   0,0,+50,1); } /* X轉0, Z移+50 */
         .fsDown {-webkit-transform: matrix3d(1,0,0,0,   0,-1,0,0,  0,0,-1,0,  0,0,-50,1);
