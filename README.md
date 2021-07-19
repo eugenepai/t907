@@ -11,7 +11,7 @@
   - python/flask + plotly：改用plotly畫出的圖形(interactive)，用flask打包成webapp，deploy to heroku上 [[在這裡 t8-03]](https://t803.herokuapp.com)。
   - python/flask + html/css/javascript：改用html/css繪圖、javascript控制、flask製作webapp，heroku上發布 [[→ t9-05]](https://t905.herokuapp.com)。
   - (WCA version) python/flask + html/css/javascript：改用html/css繪圖、javascript控制、flask製作webapp，heroku上發布 [[→ t9-06]](https://t906.herokuapp.com) 
-####on Github
+#### on Github
   - (WCA version) html+css+javascript版：webapp改成static html，放在 github pages上 [[currentProject t9-07]](https://eugenepai.github.io/t907/)
 
 ## WCA  / World Cube Association / 世界方塊協會
