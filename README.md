@@ -1,4 +1,5 @@
-## Rukbik's Cube Everywhere! --- WCA version
+##### html, css, javasctipt, jQuery
+# Rukbik's Cube Everywhere! --- WCA version
 ### seanachanpai
 
 這是高一自主學習完成的作品，有python版、python/flask/html/javascript版、跟html/css/javascript版。
@@ -11,9 +12,9 @@
 
 - html+css+javascript版：webapp改成static html，就可以放在 github pages上了 [[在這裡]](https://eugenepai.github.io/t907/)。
 
-### WCA 競賽規則 / WCA Regulations
-- [世界方塊協會](https://www.worldcubeassociation.org/regulations/translations/chinese-traditional/)
-- [World Cube Association](https://www.worldcubeassociation.org/regulations/)
+### WCA  / World Cube Association / 世界方塊協會
+- [WCA競賽規則](https://www.worldcubeassociation.org/regulations/translations/chinese-traditional/)
+- [WCA Regulations](https://www.worldcubeassociation.org/regulations/)
 
 ### How to Play
 Check out [[here]](https://eugenepai.github.io/t907/howToPlay.html)
