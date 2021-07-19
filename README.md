@@ -2,7 +2,7 @@
 # Rukbik's Cube Everywhere! --- WCA version
 ### seanachanpai
 
-## Versions
+## developed versions
 這是部分高一自主學習完成的作品，有：python版、python+flask/html/css/javascript版、跟html/css/javascript版。
 #### on Local
   - python版：使用 matplotlib (+numpy)畫出可操作的魔術方塊，僅可單機使用；
