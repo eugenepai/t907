@@ -360,12 +360,9 @@
                             </td>
                             <td colspan=2 class="subTitle centerText">
                                 <button  onclick=scrambleStart()>轉亂模式</button>
-                                <!-- <form  class="centerText" method='POST' action="https://eugenepai.github.io/t906/rubiksGame.html"> -->
-                                    <!-- <button type=submit>轉亂模式</button> -->
                                     <input style="width:4em; text-align:right;"
                                            id="scrambleTurns" name="scrambledNo" type=number value=32 min=0 max=100 />
                                     <span> 次</span>
-                                <!-- </form> -->
                             </td>
                         </tr>
                         <!-- ------------------------------------------------------------ -->
@@ -520,39 +517,41 @@
     OBTM = 0;
     ETM =0;
     function push2Rotate(XYZ,pos,rotLayers,rot){
-        lockState = "Locked";
-        if (rotLayers !=3 ) { OBTM++ };
-        $('#OBTM').text(" OBTM = " + OBTM + " 次" );
-        ETM++
-        $('#ETM').text(" ETM = " + ETM + " 次" );
-        // push cube to tempDiv
-        $("#cube").append($("<div></div>").attr('id','tempId').addClass("tempClass"));
-        var tempDiv =$("#tempId");
-        $.each(cubeList, function(index, item) {
-            var tempArr = $(item).css('-transform').split(',');
-            // 1-layers move
-            if ( parseInt(tempArr[XYZ],10)=== pos )   { $(item).appendTo(tempDiv); };
-            // 2-layers move
-            if ( Math.abs(parseInt(tempArr[XYZ],10))=== rotLayers-2 )   { $(item).appendTo(tempDiv); };
-            // 3-layers move
-            if ( rotLayers === 3 )   { $(item).appendTo(tempDiv); };
-        });
-        
-        // transition speed setting
-        var transitionSpeedSetting = "all " + $("#rotSpeed").val() + "ms ease-in-out" ;
-        tempDiv.css("-transition", transitionSpeedSetting);
-
-        // update cube css to rotate, then back to original div (listen to transitioned event)
-        tempDiv.css("-transform",tempDiv.css("-transform") + "matrix3d(" +rot+ ")");          
-        tempDiv.on( 'transitionend webkitTransitionEnd',function() {
-            var tempDivChild = tempDiv.children("div");
-            $.each(tempDivChild, function(index, item) {             
-                $(item).css('-transform', tempDiv.css('-transform') + $(item).css('-transform'));
-                $(item).appendTo(cube);
+        if (lockState != "Locked") {
+            lockState = "Locked";        
+            if (rotLayers !=3 ) { OBTM++ };
+            $('#OBTM').text(" OBTM = " + OBTM + " 次" );
+            ETM++
+            $('#ETM').text(" ETM = " + ETM + " 次" );
+            // push cube to tempDiv
+            $("#cube").append($("<div></div>").attr('id','tempId').addClass("tempClass"));
+            var tempDiv =$("#tempId");
+            $.each(cubeList, function(index, item) {
+                var tempArr = $(item).css('-transform').split(',');
+                // 1-layers move
+                if ( parseInt(tempArr[XYZ],10)=== pos )   { $(item).appendTo(tempDiv); };
+                // 2-layers move
+                if ( Math.abs(parseInt(tempArr[XYZ],10))=== rotLayers-2 )   { $(item).appendTo(tempDiv); };
+                // 3-layers move
+                if ( rotLayers === 3 )   { $(item).appendTo(tempDiv); };
             });
-            tempDiv.remove();
-            lockState = "unLocked";
-        });
+            
+            // transition speed setting
+            var transitionSpeedSetting = "all " + $("#rotSpeed").val() + "ms ease-in-out" ;
+            tempDiv.css("-transition", transitionSpeedSetting);
+
+            // update cube css to rotate, then back to original div (listen to transitioned event)        
+            tempDiv.css("-transform",tempDiv.css("-transform") + "matrix3d(" +rot+ ")");
+            tempDiv.on( 'transitionend webkitTransitionEnd',function() {
+                var tempDivChild = tempDiv.children("div");
+                $.each(tempDivChild, function(index, item) {             
+                    $(item).css('-transform', tempDiv.css('-transform') + $(item).css('-transform'));
+                    $(item).appendTo(cube);
+                });
+                tempDiv.remove();
+                lockState = "unLocked";
+            });
+        }
     };
 //===============================  Start Mode  ================================================
     // Load no of turns to scramble from html input box
@@ -570,7 +569,7 @@
         if (turns > 0) { $("#scrambleTurns").val(turns);  }
         localStorage.removeItem('LocalStorageturns');
     });
-//===============================  Scramble ================================================
+//=============================== for Scramble ================================================
     // push - rotate - pull back, W/O TRANSITION EFFECT when run scrambling
     // Rotate Moves
     function push2RotateNoTransition(XYZ,pos,faceDiv,rot) {
@@ -678,7 +677,7 @@
             }, timeWait);
         }); 
     });
-//==============  rotation modifier ===============================================================
+//==============  rotation modifier for swipe rotation on cube ===================================
     // determine roration direction as per touch start and end position 
     function getSwipeClockwiseAndMove (tempXYZPointerDown, tempXYZPointerUp) {
         var md12 = parseInt(tempXYZPointerDown[12],10); var mu12 = parseInt(tempXYZPointerUp[12],10);
