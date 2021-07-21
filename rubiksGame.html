@@ -10,7 +10,7 @@
         table {table-layout:fixed; }
         .beHidden {display:none;}
         .noBorder {border:none; border-width:0;}
-        .nonSelectable {user-select: none; -webkit-user-select: none;}        
+        /* .nonSelectable {user-select: none; -webkit-user-select: none;}         */
         /* table head setting*/
         .tbl {border:2px black solid; width:100%; height:100%; table-layout:fixed; font-family: Arial;}
         .tbltr12 {text-align:center; font-weight:bolder;color:black}
@@ -18,18 +18,18 @@
         /*Game control button setting*/
         .plainCtrl {color:black; border: 2px solid black; border-radius:5px; width:6em; height:2.5em; }
 
-        .W-CCW {background: -webkit-linear-gradient(0deg,white,gray); }
-        .W-CW {background: -webkit-linear-gradient(180deg,white,gray); }
-        .B-CCW {background: -webkit-linear-gradient(right,white,Blue); }
-        .B-CW {background: -webkit-linear-gradient(left,white,blue); }
-        .G-CCW {background: -webkit-linear-gradient(right,white,green); }
-        .G-CW {background: -webkit-linear-gradient(left,white,green); }
-        .R-CCW {background: -webkit-linear-gradient(right,white,red); }
-        .R-CW {background: -webkit-linear-gradient(left,white,red); }
-        .O-CCW {background: -webkit-linear-gradient(right,white,orange); }
-        .O-CW {background: -webkit-linear-gradient(left,white,orange); }
-        .Y-CCW {background: -webkit-linear-gradient(right,white,yellow); }
-        .Y-CW {background: -webkit-linear-gradient(left,white,yellow); }
+        .W-CCW  {background: -webkit-linear-gradient(0deg,white,gray); }
+        .W-CW   {background: -webkit-linear-gradient(180deg,white,gray); }
+        .B-CCW  {background: -webkit-linear-gradient(right,white,Blue); }
+        .B-CW   {background: -webkit-linear-gradient(left,white,blue); }
+        .G-CCW  {background: -webkit-linear-gradient(right,white,green); }
+        .G-CW   {background: -webkit-linear-gradient(left,white,green); }
+        .R-CCW  {background: -webkit-linear-gradient(right,white,red); }
+        .R-CW   {background: -webkit-linear-gradient(left,white,red); }
+        .O-CCW  {background: -webkit-linear-gradient(right,white,orange); }
+        .O-CW   {background: -webkit-linear-gradient(left,white,orange); }
+        .Y-CCW  {background: -webkit-linear-gradient(right,white,yellow); }
+        .Y-CW   {background: -webkit-linear-gradient(left,white,yellow); }
         
         .btHd {font-size:0.8em;font-weight:bold;vertical-align:middle; text-align:center; margin:5%; }
         .subTitle {font-size:0.8em;font-weight:bold;}
@@ -42,15 +42,14 @@
             -webkit-perspective:none;
             -webkit-transform-style: preserve-3d;
             -webkit-transform: rotate3d(1,1,0,-30deg) rotate3d(1,0,0,90deg) ;
-            -webkit-transition: all 150ms ease-in-out;
+            -webkit-transition: all 250ms ease-in-out;
             perspective:none;
             transform-style: preserve-3d;
             transform: rotate3d(1,1,0,-30deg) rotate3d(1,0,0,90deg) ;
-            transition: all 150ms ease-in-out; }
+            transition: all 250ms ease-in-out; }
         .cubeClass div {
             box-sizing: border-box;
-            width:100%;
-            height:100%;
+            width:100%; height:100%;
             position:absolute;
             -webkit-transform-style:preserve-3d; transform-style:preserve-3d;
             font-size:xx-large ; }
@@ -64,6 +63,7 @@
         .white {background-color: white; }
         .yellow {background-color: yellow; }
         .black {background-color: black; }
+
         /* unit cube: position setting of 6 faces */
         /*matrix3d座標軸方向: X:(藍色right(+X)螢幕平面之右、Z:(白色up(+Z)螢幕平面之上、Y:(紅色front(+Y)垂直螢幕出來向自己方向 
         X90=[1,0,0,0,   0,0,-1,0,   0,1,0,0,    0,0,0,1];   Xn90=[1,0,0,0,   0,0,1,0,    0,-1,0,0,   0,0,0,1];
@@ -160,9 +160,9 @@
                        transform: matrix3d(1,0,0,0,   0,1,0,0,   0,0,1,0,   +100,   -100,   -100,   1);}
         /* temp div for rotation purpose */
         .tempClass {-webkit-transform: matrix3d(1,0,0,0,   0,1,0,0,   0,0,1,0,  0,0,0,1);
-                    -webkit-transition: all 150ms ease-in-out; 
+                    -webkit-transition: all 250ms ease-in-out; 
                     transform: matrix3d(1,0,0,0,   0,1,0,0,   0,0,1,0,  0,0,0,1);
-                    transition: all 150ms ease-in-out;  }
+                    transition: all 250ms ease-in-out;  }
         .fooClass {-webkit-transform: matrix3d(1,0,0,0,   0,1,0,0,   0,0,1,0,  0,0,0,1);
                     -webkit-transition: none; 
                     transform: matrix3d(1,0,0,0,   0,1,0,0,   0,0,1,0,  0,0,0,1);
@@ -351,7 +351,7 @@
                             <td class="subTitle">啟動模式</td>
                             <td colspan=2 class="subTitle rightText">轉動速度
                                 <input style="width:4em; text-align:right;" 
-                                       id="rotSpeed" name="rotSpeedNo" type=number value=150 min=10 max=5000 /><span> ms</span>
+                                       id="rotSpeed" name="rotSpeedNo" type=number value=250 min=10 max=5000 /><span> ms</span>
                             </td>                            
                         </tr>
                         <tr>
@@ -393,7 +393,7 @@
                     <table id="faceMoveControl" style="height:60%; width:100%;border-collapse: collapse;table-layout:fixed;">
                     <tbody>
                         <tr>
-                            <td colspan=3 class="subTitle borderTop">最外層轉動 Face moves -- <b>Click</b> & <br/>
+                            <td colspan=3 class="subTitle borderTop">最外層轉動 Face moves -- <b>Click </b> & <br/>
                                                                      多層轉動 Outer block moves -- <b>Swipe</b>
                             </td>  
                         </tr>
