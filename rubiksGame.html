@@ -17,6 +17,7 @@
         .tbltr3 {font-size:1em; line-height:1em;text-align:center;font-weight:bold;color:black;}
         /*Game control button setting*/
         .plainCtrl {color:black; border: 2px solid black; border-radius:5px; width:6em; height:2.5em; }
+        .roundEdge {border-radius:5px;border: 1px solid black;padding:3px 10px; font-weight:bolder;color:blue;}
 
         .W-CCW  {background: -webkit-linear-gradient(0deg,white,gray); }
         .W-CW   {background: -webkit-linear-gradient(180deg,white,gray); }
@@ -75,17 +76,17 @@
         Z180=[-1,0,0,0,  0,-1,0,0,   0,0,1,0,   0,0,0,1];
         */
 
-        .fsUp:after   {transform: matrix3d(1,0,0,0,   0,1,0,0,   0,0,1,0,   0,0,-0.035,1);border: solid black 5px; border-radius:20px; 
+        .fsUp:after   {transform: matrix3d(1,0,0,0,   0,1,0,0,   0,0,1,0,   0,0,-0.15,1);border: solid black 5px; border-radius:20px; 
                         content:''; background-color: black; width:103%; height:103%; box-sizing: border-box; position:absolute;}
-        .fsDown:after {transform: matrix3d(1,0,0,0,   0,1,0,0,   0,0,1,0,   0,0,-0.035,1);border: solid black 5px; border-radius:20px; 
+        .fsDown:after {transform: matrix3d(1,0,0,0,   0,1,0,0,   0,0,1,0,   0,0,-0.15,1);border: solid black 5px; border-radius:20px; 
                         content:''; background-color: black; width:103%; height:103%; box-sizing: border-box; position:absolute;} 
-        .fsFront:after{transform: matrix3d(1,0,0,0,   0,1,0,0,   0,0,1,0,   0,0,-0.035,1);border: solid black 5px; border-radius:20px; 
+        .fsFront:after{transform: matrix3d(1,0,0,0,   0,1,0,0,   0,0,1,0,   0,0,-0.15,1);border: solid black 5px; border-radius:20px; 
                         content:''; background-color: black; width:103%; height:103%; box-sizing: border-box; position:absolute;} 
-        .fsBack:after {transform: matrix3d(1,0,0,0,   0,1,0,0,   0,0,1,0,   0,0,-0.035,1);border: solid black 5px; border-radius:20px; 
+        .fsBack:after {transform: matrix3d(1,0,0,0,   0,1,0,0,   0,0,1,0,   0,0,-0.15,1);border: solid black 5px; border-radius:20px; 
                         content:''; background-color: black; width:103%; height:103%; box-sizing: border-box; position:absolute;}
-        .fsLeft:after {transform: matrix3d(1,0,0,0,   0,1,0,0,   0,0,1,0,   0,0,-0.035,1);border: solid black 5px; border-radius:20px; 
+        .fsLeft:after {transform: matrix3d(1,0,0,0,   0,1,0,0,   0,0,1,0,   0,0,-0.15,1);border: solid black 5px; border-radius:20px; 
                         content:''; background-color: black; width:103%; height:103%; box-sizing: border-box; position:absolute;}
-        .fsRight:after{transform: matrix3d(1,0,0,0,   0,1,0,0,   0,0,1,0,   0,0,-0.035,1);border: solid black 5px; border-radius:20px; 
+        .fsRight:after{transform: matrix3d(1,0,0,0,   0,1,0,0,   0,0,1,0,   0,0,-0.15,1);border: solid black 5px; border-radius:20px; 
                         content:''; background-color: black; width:103%; height:103%; box-sizing: border-box; position:absolute;}
 
         .fsUp   {-webkit-transform: matrix3d(1,0,0,0,   0,1,0,0,   0,0,1,0,   0,0,+50,1);
@@ -169,7 +170,7 @@
                     transition: none;  }
     </style>
 </head>
-<body>
+<body style="background-color: #EEEEEE;">
     <table border="1" class="tbl">
         <thead></thead>
         <tbody>
@@ -193,7 +194,7 @@
             </tr>            
             <tr height=88% >
                 <td colspan=3 rowspan=15 id="gameConsole">
-                    <button  onclick="location.href='howToPlay.html'">
+                    <button  class="roundEdge" style="margin:5px;" onclick="location.href='howToPlay.html'">
                         How To Play
                     </button>                    
                     <div style="color:red; font-size:1em; float:right;" id="CapsLockIsOn"></div>
@@ -350,17 +351,17 @@
                         <tr>
                             <td class="subTitle">啟動模式</td>
                             <td colspan=2 class="subTitle rightText">轉動速度
-                                <input style="width:4em; text-align:right;" 
+                                <input style="width:4em; text-align:right;background-color: #EEEEEE;" 
                                        id="rotSpeed" name="rotSpeedNo" type=number value=250 min=10 max=5000 /><span> ms</span>
                             </td>                            
                         </tr>
                         <tr>
                             <td class="subTitle centerText" >
-                                <button onclick=regularStart()>規則模式</button>
+                                <button class="roundEdge" onclick=regularStart()>規則模式</button>
                             </td>
                             <td colspan=2 class="subTitle centerText">
-                                <button  onclick=scrambleStart()>轉亂模式</button>
-                                    <input style="width:4em; text-align:right;"
+                                <button class="roundEdge" onclick=scrambleStart()>轉亂模式</button>
+                                    <input style="width:4em; text-align:right;background-color: #EEEEEE;"
                                            id="scrambleTurns" name="scrambledNo" type=number value=32 min=0 max=100 />
                                     <span> 次</span>
                             </td>
